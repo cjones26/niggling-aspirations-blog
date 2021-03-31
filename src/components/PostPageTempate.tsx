@@ -1,6 +1,8 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
+import { MDXProvider } from '@mdx-js/react';
+import CodeBlock from './CodeBlock';
 
 export interface PostPageTemplateWithData {
   data: {
@@ -26,6 +28,10 @@ export const query: void = graphql`
   }
 `;
 
+export const components = {
+  pre: CodeBlock,
+};
+
 export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
   const { frontmatter, body } = data.mdx;
 
@@ -34,7 +40,9 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
       <div>
         <h1>{frontmatter.title}</h1>
         <p>{frontmatter.date}</p>
-        <MDXRenderer>{body}</MDXRenderer>
+        <MDXProvider components={components}>
+          <MDXRenderer>{body}</MDXRenderer>
+        </MDXProvider>
       </div>
     </>
   );

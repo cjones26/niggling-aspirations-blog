@@ -37,11 +37,10 @@ For the next steps, Vijay Kumar has provided some excellent steps [here](https:/
 
 Unfortunately it wasn't so simple as it appeared my corporate proxy was blocking or throwing 403 errors when nw-gyp was attempting to pull the NW.js headers from the Amazon AWS site. After looking through a bit of the code, I discovered `install.js` did in fact contain proxy support:
 
-    // basic support for a proxy server
-    var proxyUrl = gyp.opts.proxy
-                || process.env.http_proxy
-                || process.env.HTTP_PROXY
-                || process.env.npm_config_proxy
+```js
+// basic support for a proxy server
+var proxyUrl = gyp.opts.proxy || process.env.http_proxy || process.env.HTTP_PROXY || process.env.npm_config_proxy;
+```
 
 Woohoo! I was able able to simply set my `HTTP_PROXY` environment variable and move forward. A quick note is that Vijay was building for x86 while I was building for x64, therefore, the only change I needed from his steps was modifying the first line to:
 

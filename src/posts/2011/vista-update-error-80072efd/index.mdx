@@ -1,0 +1,36 @@
+---
+title: 'Windows Vista Update Error 0x80072EFD'
+date: 2011-02-10
+published: true
+tags:
+  - Windows Vista
+  - Windows update
+---
+
+Could not update Vista SP1 due to 0x80072EFD error, so I started out by manually updating to SP2. No success. This was driving me absolutely insane until I actually read the `C:\windows\windowsupdate.log` file.
+
+First, try resetting the HTTP proxy through an elevated command prompt with the following command:
+
+```
+netsh winhttp show proxy
+```
+
+If you are still receiving this error, be sure you follow this KB:
+
+http://support.microsoft.com/kb/836941
+
+If this does not resolve the problem, try resetting Windows Update Components with the following Microsoft Fix It:
+
+http://support.microsoft.com/kb/971058
+
+If this still does not work, be sure that WSUS GPO & registry settings are NOT in place!
+
+First check GPO:
+
+`Administrative Templates->Windows Components->Windows Update`, under the setting `Configure automatic updates.` If this is already set to `Not configured,` then check registry settings under:
+
+```
+HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate
+```
+
+For any WSUS keys. Deleting the WSUS keys I found in the registry fixed my issue.

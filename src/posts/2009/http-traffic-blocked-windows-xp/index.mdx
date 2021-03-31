@@ -1,0 +1,29 @@
+---
+title: 'HTTP Traffic Blocked (Windows XP)'
+date: 2009-12-01
+published: true
+tags:
+  - Windows XP
+  - HTTP Traffic
+  - Norton Internet Security
+---
+
+Yesterday, I got some work fixing a PC that was loaded with trojans. After a repair installation of XP Pro w/SP2, I was brought to the activation window which could not hit the internet.
+
+Thinking the problem was a driver issue, I quickly pulled the Windows key + U trick to pull up an explorer window. Finding the drivers were intact, I proceeded to both `ping 4.2.2.2` & `google.com`, as well as `nslookup google.com`. Both were successful.
+
+I opened an IE window, checked the proxy settings, reset all the settings, etc...still could not browse--was getting the error:
+
+> Internet Explorer can not open the search page."
+
+As well as a page cannot be displayed error.
+
+Thinking the trojan was still impacting IE, I installed Firefox from a flash drive, and ended up with the same result.
+
+I next attempted to `telnet` to port 80 & 8080 on a number of web sites. All HTTP traffic was blocked.
+
+After a few more hours of struggling & research, I realized the culprit:
+
+Norton Internet Security Version 2006 (Symantec).
+
+A run of the Norton Removal Tool (http://service1.symantec.com/Support/tsgeninfo.nsf/docid/2005033108162039) & reboot, and the issue was resolved.

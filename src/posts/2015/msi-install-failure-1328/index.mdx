@@ -1,0 +1,33 @@
+---
+title: 'MSI Installation Failure - 1328. Error applying patch.'
+date: 2015-12-02
+published: true
+tags:
+  - MSI
+  - Patching
+---
+
+Wow this one killed me. After attempting to determine why I simply could not install Adobe DC with our package from enterprise (though only on certain machines) I really had to dig into this one. The package would first fail with a generic:
+
+> Product: Adobe Acrobat DC - Update 'Adobe Acrobat DC (15.006.30060)' could not be installed. Error code 1603.
+
+Knowing that this is a very generic error code, I began digging through a "l\*v" generated log to determine the true source of the failure.
+
+> MSI (s) (84:88) [14:36:07:292]: Product: Adobe Acrobat DC -- Error 1328.Error applying patch to file C:\Config.Msi\PT2AFE.tmp. It has probably been updated by other means, and can no longer be modified by this patch. For more information contact your patch vendor. System Error: -1072807676
+> Error 1328.Error applying patch to file C:\Config.Msi\PT2AFE.tmp. It has probably been updated by other means, and can no longer be modified by this patch. For more information contact your patch vendor. System Error: -1072807676
+
+Aha, so it appeared that for some reason the MSP packaged with the MSI was failing to be applied. Scrolling up through the log I was able to identify the actual failing file itself:
+
+> MSI (s) (84:88) [14:36:07:292]: Executing op: CacheBaselineFile(Baseline=0,FileKey=adobe_caps.dll,FilePath=C:\Program Files (x86)\Adobe\Acrobat 2015\Acrobat\adobe_caps.dll,,Existing=0)
+> MSI (s) (84:88) [14:36:07:292]: Executing op: PatchApply(PatchName=adobe_caps.dll,TargetName=C:\Program Files (x86)\Adobe\Acrobat 2015\Acrobat\adobe_caps.dll,PatchSize=81904,TargetSize=552632,PerTick=0,,FileAttributes=16384,PatchAttributes=0,CheckCRC=0)
+> MSI (s) (84:88) [14:36:07:292]: Patch for file 'C:\Program Files (x86)\Adobe\Acrobat 2015\Acrobat\adobe_caps.dll' is redirected to patch 'C:\Config.Msi\PT2AFE.tmp' instead.
+
+At this point I needed to dig deeper--I know that the package installed perfectly on other machines, so why not this one? Firing up Procmon, I was able to see that `msiexec.exe` was hitting the `adobe_caps.dll` file here:
+
+```
+C:\Windows\Installer\$PatchCache$\Managed\68AB67CA3301FFFF7706E0F060571500\15.6.30033
+```
+
+Being unfamiliar with the `$PatchCache$` folder, I did a little research and found that files can be cached here (and only cached ONCE) for any MSP file installed on your machine. Since the installer was being pulled across the network, it looks like a network hiccup occurred and a corrupt version of the `adobe_caps.dll` (showing as 0 KB) was stored in cache.
+
+To resolve the error, all that needed to be done was to remove the entire `68AB67CA3301FFFF7706E0F060571500` folder & reinstall! Bam!!

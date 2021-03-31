@@ -1,0 +1,96 @@
+---
+title: 'Gnome Decent Dual Monitor Wallpaper Span'
+date: 2010-10-06
+published: true
+tags:
+  - Wallpaper span
+  - Compiz Fusion
+  - Gnome
+  - Dual monitors
+---
+
+Tired of trying to use compiz to have wallpaper span both screens, only to find your desktop icons disappear?
+
+A few months ago I embarked on a relentless search through mountains of RGBA patches, custom versions of nautilus, and failed attempts at allowing desktop icons to pierce through compiz's iron curtain.
+
+Finally created a decent method of having wallpaper span dual monitors in Gnome by overriding Gnome's "Spanned" desktop setting (I don't think it works right anyway) with a "Zoomed" dual monitor setting. I first tried this by scaling the image directly, but it looked like crap so I figure Zoom would be better to use. The result is not perfect, but definitely better than waiting 15 years for the Gnome team to come up with a plausible solution.
+
+The steps I took were for Arch Linux, but you can apply them equally well to any distribution, as long as you know how to make packages from source.
+
+After reading through this bug, I realized I should be modifying the desktop settings directly.
+
+I checked my Gnome version through pacman, and proceeded to download the `PKGBUILD` straight from the Arch SVN. After receiving the source code, I ran `makepkg` once to ensure the source would compile properly, then proceeded to comment out the following lines in the `PKGBUILD` file:
+
+```
+#source=(http://ftp.gnome.org/pub/gnome/sources/${pkgname}/2.32/${pkgname}-${pkgver}.tar.bz2)
+#sha256sums=('blahblah')
+```
+
+To ensure that the source code would not be downloaded again & overwrite my modifications.
+
+Next, I proceeded to open the `src/gnome-desktop-2.32.0/libgnome-desktop/gnome-bg.c` file, and commented out the following line, simply copying the Gnome "Zoom" option's code to the "Span" section of the case statement:
+
+```cpp
+#if 0
+    g_print ("original_width: %d %d\n",
+    gdk_pixbuf_get_width (pixbuf),
+    gdk_pixbuf_get_height (pixbuf));
+#endif
+
+switch (placement) {
+  case GNOME_BG_PLACEMENT_SPANNED:
+    // COMMENT OUT THE NEXT LINE AS SHOWN BELOW
+    // new = pixbuf_scale_to_fit (pixbuf, width, height);
+    // REPLACE WITH THE BELOW LINE
+    new = pixbuf_scale_to_min (pixbuf, width, height);
+    break;
+case GNOME_BG_PLACEMENT_ZOOMED:
+    new = pixbuf_scale_to_min (pixbuf, width, height);
+    break;
+case GNOME_BG_PLACEMENT_FILL_SCREEN:
+    new = gdk_pixbuf_scale_simple (pixbuf, width, height,
+                        GDK_INTERP_BILINEAR);
+    break;
+case GNOME_BG_PLACEMENT_SCALED:
+    new = pixbuf_scale_to_fit (pixbuf, width, height);
+    break;
+case GNOME_BG_PLACEMENT_CENTERED:
+case GNOME_BG_PLACEMENT_TILED:
+default:
+    new = pixbuf_clip_to_fit (pixbuf, width, height);
+    break;
+}
+```
+
+Finally, in the next section continaing the `GNOME_BG_PLACEMENT_SPANNED` (around 20 lines down from the previous section), I made the following modification to the code (see comments):
+
+```cpp
+scaled = get_scaled_pixbuf (placement, pixbuf, dest_width, dest_height, &x, &y, &w, &h);
+
+switch (placement) {
+  case GNOME_BG_PLACEMENT_TILED:
+    pixbuf_tile (scaled, dest);
+    break;
+  case GNOME_BG_PLACEMENT_ZOOMED:
+  case GNOME_BG_PLACEMENT_CENTERED:
+  case GNOME_BG_PLACEMENT_FILL_SCREEN:
+  case GNOME_BG_PLACEMENT_SCALED:
+    pixbuf_blend (scaled, dest, 0, 0, w, h, x + area->x, y + area->y, 1.0);
+    break;
+  case GNOME_BG_PLACEMENT_SPANNED:
+    // COMMENT OUT THE NEXT LINE AS SHOWN BELOW
+    // pixbuf_blend (scaled, dest, 0, 0, w, h, x, y, 1.0);
+    // REPLACE WITH THE BELOW LINE
+    pixbuf_blend (scaled, dest, 0, 0, w, h, x + area->x, y + area->y, 1.0);
+    break;
+  default:
+    g_assert_not_reached ();
+    break;
+}
+
+g_object_unref (scaled);
+```
+
+From here, I saved the source, ran `makepkg -f` again, installed the package, and restarted Gnome. They are nice ;).
+
+![Spanned wallpaper](./3rd_boobs.jpeg)

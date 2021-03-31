@@ -1,0 +1,63 @@
+---
+title: 'ServiceStack v3, Angular, IIS Express, Windows Authentication & CORS '
+date: 2015-06-06
+published: true
+tags:
+  - ServiceStack v3
+  - Angular
+  - IIS Express
+  - Windows Authentication
+  - CORS
+---
+
+I've recently busted my balls trying to get ServiceStack v3/Angular/IIS Express/Windows Authentication all working together in our corporate environment. It was a bit of a nightmare but it appears I finally have it all figured out. Sorry about the crappy formatting.
+
+First of all, I am running Visual Studio 2010 so I needed to ensure that SP1 was installed so I could properly configure my site from the Properties dialog of solution explorer. First things first, you'll need to ensure that both Anonymous Authentication & Windows Authentication are enabled on the site:
+
+![Project properties](./capture.png)
+
+Once you've confirmed both are enabled, head over to your web.config file and be sure you ad the following to the system.web section (OPTIONS simply would not work with Windows auth):
+
+```xml
+<system.web>
+  <authorization>
+    <allow verbs="OPTIONS" users="*"/>
+    <deny users="?" />
+  </authorization>
+</system.web>
+```
+
+After this is added, implement Demis' (mythz) fallback service documented here (http://stackoverflow.com/questions/19254512/servicestack-corsfeature-global-options-handler-not-firing-on-certain-routes):
+
+**Request:**
+
+```cs
+[FallbackRoute("/{Path*}")]
+public class Fallback
+{
+	public string Path { get; set; }
+}
+```
+
+**Service:**
+
+```cs
+public class FallbackService : Service
+{
+    public object Any(Fallback request)
+    {
+        if (base.Request.HttpMethod == "OPTIONS")
+            return null;
+
+        throw HttpError.NotFound(String.Format("{0} was not found", request.Path));
+    }
+}
+```
+
+And finally you'll need to add the following to your `AppHostBase` in `Global.asax`:
+
+```cs
+base.Plugins.Add(new CorsFeature(allowedOrigins: "http://FrontendUrlHere", allowCredentials: true, allowedMethods: "GET,POST,PUT,DELETE,OPTIONS"));
+```
+
+Be sure you replace `FrontendUrlHere` with your front-end URL. Allowed origins of `*` do not work when `allowCredentials` is set to true due to security reasons.

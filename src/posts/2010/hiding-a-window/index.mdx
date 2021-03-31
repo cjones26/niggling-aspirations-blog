@@ -1,0 +1,25 @@
+---
+title: 'Hiding a visible window while allowing it to continue running in the background'
+date: 2010-02-16
+published: true
+tags:
+  - C#
+  - .NET
+---
+
+So I recently set up a VirtualBox VM on my Windows 7 machine so I could access my XFS hard disk through a network share.
+
+Being there's no way to hide a VirualBox VM by default (even by running in headless mode), I went ahead & wrote a quick C# program to hide running windows.
+
+First of all, I created a batch file to run my VM headless...the contents are as follows:
+
+```bat
+cd "C:\Program Files\Sun\VirtualBox"
+VBoxHeadless.exe -s Ubuntu
+```
+
+Simple enough?
+
+Here's my error-prone, crappy window hiding app:
+
+https://github.com/cjones26/HideWindow

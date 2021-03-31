@@ -1,0 +1,49 @@
+---
+title: 'Cinnamon boots to black screen with cursor, then restarts in a loop, the logs reference systemd / dbus timeout'
+date: 2020-10-19
+published: true
+tags:
+  - Linux
+  - Cinnamon
+---
+
+I've been running Linux Mint now for ~10 years after earlier forays into Gentoo, Slackware & Arch. Back when I was a teenager and I didn't have the cash to purchase new hardware and needed to squeeze every inch of performance out of my machines, distributions which gave me fine-grained control of what was running in the kernel & user space not only gave me this last bit of performance, but also taught me a lot about running Linux & GNU in general.
+
+Since moving over to Linux Mint, things have usually "just worked" without the need for me to actively manage my OS. Unfortunately, computers are computers and sometimes things break. I don't have to reboot often, though I do like to keep my machine up-to-date. After keeping my machine up for a month or two, I noticed that suddenly I was experiencing catastrophic failure--the network was working, but Network Manager was not. I was unable to perform many tasks on the machine, therefore, I rebooted.
+
+The machine appeared to reboot fine, albeit taking ~5 minutes longer than normal, though once I entered into X is when I noticed that lightdm was _not_ coming up--I would see a pointer on a black screen before X cycled into a loop, exiting to a blinking cursor and then back to the black screen with pointer.
+
+Quickly dropping into my terminal & killing lightdm, I began reviewing the lightdm logs to see exactly where the problem lay. I saw several lines like so:
+
+> WARNING: Failed to get list of logind seats: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.login1': timed out (service_start_timeout=25000ms)
+
+And so:
+
+> WARNING: Error getting user list from org.freedesktop.Accounts: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.Accounts': timed out (service_start_timeout=25000ms)
+
+Thinking possibly that a package broke my system, I proceeded to perform an apt update / apt upgrade, though while running apt I also was seeing the following suspicious error:
+
+> Error: Timeout was reached
+> Reading package lists... Done
+
+Digging into my syslog also showed multiple service start failures, all pointing back to a DBus timeout:
+
+> Oct 18 16:13:14 hostname accounts-daemon[1173]: error getting polkit authority: Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.PolicyKit1': timed out (service_start_timeout=25000ms)
+> Oct 18 16:13:14 hostname udisksd[1164]: Error initializing polkit authority: Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.PolicyKit1': timed out (service_start_timeout=25000ms) (g-dbus-error-quark, 20)
+> Oct 18 16:13:14 hostname ModemManager[1172]: <warn> failed to create PolicyKit authority: 'Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.PolicyKit1': timed out (service_start_timeout=25000ms)'
+
+After doing some research I came across some posts regarding the transition away from /var/run/dbus as a standalone folder, and rather a symlink to /run/dbus:
+
+- https://bugs.freedesktop.org/show_bug.cgi?id=75515
+- https://bugs.launchpad.net/ubuntu/+source/dbus/+bug/811441
+- https://forums.gentoo.org/viewtopic-t-1090156-start-0.html
+
+Clearly, there was something wrong with my `/var/run` configuration--after checking, it appears that some package had replaced `/var/run` with a real folder--instead of a symlink to `/run`.
+
+After re-creating the symlink with the following command and rebooting, everything was back to normal 🎉:
+
+```
+ln -s /run /var/run
+```
+
+_Note: After writing this blog post, I realized that the root cause of the issue & the solution were clearly documented on the Linux Mint Releases & Announcements form here: https://forums.linuxmint.com/viewtopic.php?t=331605_

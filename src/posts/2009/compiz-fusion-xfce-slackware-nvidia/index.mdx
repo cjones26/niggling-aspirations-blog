@@ -1,0 +1,121 @@
+---
+title: 'Compiz Fusion + Xfce 4.6 + Slackware 12.2 + NVIDIA'
+date: 2009-08-30
+published: true
+tags:
+  - Nvidia GeForce MX440
+  - Slackware
+  - Compiz Fusion
+---
+
+This one should be relatively easy for people, but I'd just like to document the steps taken anyway--I had a bit of a time getting Compiz to start properly in Xfce. Please note these are not best practices & are simply the steps to get compiz working for me.
+
+First of all, navigate your browser over to: [http://www.slackbuilds.org](http://www.slackbuilds.org) & run a search for "compiz," under version 12.2. Your first result will be the "compiz-bcop" slackbuild. Select it, which will show you a quick description of the package, and the suggested build order of all compiz packages:
+
+**Suggested build order:**
+
+1. compiz-bcop
+2. libcompizconfig
+3. compizconfig-backend-kconfig (optional)
+4. compizconfig-backend-gconf (optional)
+5. compizconfig-python
+6. ccsm
+7. simple-ccsm (optional)
+8. compiz-fusion-plugins-main
+9. compiz-fusion-plugins-extra (optional)
+10. compiz-fusion-plugins-unsupported (optional)
+11. emerald (optional)
+12. emerald-themes (optional)
+13. fusion-icon (optional)
+
+Now, download it. If you're unfamiliar with SlackBuilds, they're actually quite simple:
+
+1. Find which SlackBuild you'd like to download. In this case, it's the "compiz-bcop" SlackBuild. Please note that SlackBuilds _do not_ contain the application's source, this is a separate download.
+2. Download `compiz-bcop.tar.gz`, `compiz-bcop-0.7.8.tar.gz`, (or other appropriate version) and optionally, the `compiz-bcop.tar.gz.asc` file.
+3. (Optional) If you chose to download the .asc file, you can verify the integrity of your SlackBuild by using the command `gpg --verify compiz-bcop.tar.gz.asc`.
+4. Extract the SlackBuild with `tar -zxvf compiz-bcop.tar.gz`.
+5. Move the source file, `compiz-bcop-0.7.8.tar.gz` into the newly extracted `compiz-bcop` directory, and extract this file too: `tar -zxvf compiz-bcop-0.7.8.tar.gz`.
+6. Now all that's left to do is to run a quick root command of: `su -c "./compiz-bcop.SlackBuild" or sudo ./compiz-bcop.SlackBuild`
+7. You'll get some verbose build & other messages, which ultimately lead to a package created somewhere on your hard drive (in my case, which I believe is the default, the package created is `/tmp/compiz-bcop-0.7.8-i486-1_SBo.tgz`).
+8. Run a quick `su -c "installpkg /tmp/compiz-bcop-0.7.8-i486-1_SBo.tgz"` or `sudo installpkg /tmp/compiz-bcop-0.7.8-i486-1_SBo.tgz` to install the package.
+
+Work your way down the suggested build order list, installing each SlackBuild respectively (see above). In this case, we will install all the optional packages.
+
+**NOTE:** I did have an issue downloading #12. emerald-themes (optional), which I chose to skip over. You can find & install these themes if you'd like.
+
+Now, being my guide is for NVIDIA video cards, I'm unable to give much direction on other cards. To set up your card, head over to the Compiz Fusion Wiki: http://wiki.compiz-fusion.org/Hardware/NVIDIA and follow the steps for your appropriate driver version.
+
+My `/etc/X11/xorg.conf` file's `Screen` section ended up look as such to get my extremely outdated GeForce MX 440 working:
+
+```
+# Allows GLX to work with composite.
+Option         "AllowGLXWithComposite" "True"
+
+# Improves performance, enabled by default on driver versions >=1.0-9746
+Option         "RenderAccel" "True"
+
+# Always force Hsync & Vsync regardless of the mode.
+Option         "UseFBDev" "True"
+
+# I believe this was necessary to get window borders working as well.  Please correct me if wrong.
+Option         "AddARGBVisuals" "True"
+
+# Improves performance. Currently incompatible with SLI and MultiGPU modes. As of nvidia driver version 100.14.09, it has been enabled by default.
+ Option         "DamageEvents" "True"
+
+# Use the following option with caution as it may not work on all systems.
+Option         "UseEvents" "False"
+
+# Use the following option with caution as it may not work on all systems, especially with 6 series GeForce cards (it is known to cause freezes with compiz) but give it a try because it helps performance. It can also break Xinerama.
+Option         "BackingStore" "True"
+
+# Necessary to make window borders visible with nvidia driver versions prior to 100.xx.
+Option         "AddARGBGLXVisuals" "True"
+```
+
+**NOTE:** This will more than likely be different for your card, but these options work well with GeForce MX 440's :).
+
+The next step will be to configure nvidia-settings to load your configuration at Xfce's start. To do this, I wrote a very simple bash script:
+
+```
+#! /bin/bash
+# Simple script to load NVIDIA settings on Xfce start.
+nvidia-settings --load-config-only
+```
+
+Save this to `~/.init_nvidia`, make make the file executable with the command: `chmod +x ~/.init_nvidia` and add it to your `Xfce Settings->Sessions & Startup->Application Autostart tab`.
+
+Next time your restart your Xfce session, your NVIDIA settings will be loaded by default.
+
+The next step is where I got tricked up, and want to document for anyone else who might be having issues. I attempted running the command `compiz --replace` to replace xfwm4 with compiz, but it seemed as if the two were litterally fighting over managing my windows, getting stuck in an endless loop of switching back & forth between themselves. After tinkering with this issue for hours, I found the simplest solution to RTFM. I found the solution on (ha) Arch Linux's Wiki (http://wiki.archlinux.org/index.php/Compiz, using fusion icon, method 2). The steps are very simple, but only work for the current user:
+
+Edit `~/.config/xfce4-session/xfce4-session.rc` and add the following to the bottom of the file:
+
+```
+[Failsafe Session]
+Client0_Command=fusion-icon
+```
+
+Comment out `Client0_Command=xfwm4` if it exists.
+
+This should cause compiz to be loaded instead of xfwm4,
+though this didn't seem to work properly without a few extra steps.
+
+To prevent the default session from being overwritten add or change
+the `[General]` section to:
+
+```
+[General]
+AutoSave=false
+SaveOnExit=false
+```
+
+Now save the file.
+
+Back in `Xfce Settings->Sessions and Startup->Application Autostart->Add` a startup entry for the command fusion-icon
+
+Close Xfce & remove all current sessions with `rm -rf ~/.cache/sessions`.
+
+Once Xfce comes up, your windows should no longer be managed by xfwm4, but (hopefully) instead, by compiz.
+
+Have fun :).

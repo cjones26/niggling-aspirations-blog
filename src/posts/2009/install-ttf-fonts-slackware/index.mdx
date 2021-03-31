@@ -1,0 +1,23 @@
+---
+title: 'Installing .TTF Fonts in Slackware 12.2'
+date: 2009-10-19
+published: true
+tags:
+  - Slackware
+  - TTF Fonts
+---
+
+I was recently working on a project for my boss when I found I needed to install some new fonts for GIMP.
+
+I had downloaded some free TTF's from http://www.1001freefonts.com/ & needed to install them.
+
+Restarting X was a pain, so I found the following steps worked with only restarting GIMP:
+
+1.) Move your fonts into the `~/.fonts` folder. Create it if it doesn't exist.
+2.) Run command `makefontdir`
+3.) Run command `makefontscale`
+4.) Run command `fc-cache`
+5.) Finally, command `xset fp rehash`
+6.) Restart whatever application you're working with, be it GIMP, OpenOffice, or whatever.
+
+Your font should now be listed!

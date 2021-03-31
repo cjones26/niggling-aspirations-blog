@@ -1,0 +1,29 @@
+---
+title: '/proc/misc: No entry for device-mapper found Is device-mapper driver missing from kernel?'
+date: 2009-09-01
+published: true
+tags:
+  - Slackware
+  - Device Mapper
+  - /sbin/lilo
+---
+
+This is a bit of an irritating error, with a simple solution:
+
+> /proc/misc: No entry for device-mapper found
+> Is device-mapper driver missing from kernel?
+> Failure to communicate with kernel device-mapper driver.
+> Added Linux \*
+
+First of all, we need to make sure that our kernel configuration has `Device Drivers->Multiple devices driver support (RAID and LVM)` compiled in, with Device Mapper Support as a module.
+
+Once device mapper support is compiled in as a module, if we still receive the error, we can run:
+
+```
+sudo modprobe dm_mod
+sudo /sbin/lilo
+```
+
+The errors should now be gone:
+
+> Added Linux \*

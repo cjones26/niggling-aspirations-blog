@@ -1,0 +1,22 @@
+---
+title: 'Searching removable drives in Linux'
+date: 2010-04-11
+published: true
+tags:
+  - Linux
+  - Search
+  - Prune paths
+---
+
+Had some trouble with something I'd had earlier trouble with in the past. When using the locate command (even after running updatedb), I was unable to search my removable USB drives.
+
+The solution was to modify the `/etc/updatedb.conf` file, and remove `/media` from the prune path:
+
+```
+PRUNE_BIND_MOUNTS="yes"
+# PRUNENAMES=".git .bzr .hg .svn"
+PRUNEPATHS="/tmp /var/spool /media"
+PRUNEFS="NFS nfs nfs4 rpc_pipefs afs binfmt_misc proc smbfs autofs iso9660 ncpfs coda devpts ftpfs devfs mfs shfs sysfs cifs lustre_lite tmpfs usbfs udf"
+```
+
+Guess this was more a mental note to myself :).

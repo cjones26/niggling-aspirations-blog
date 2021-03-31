@@ -1,0 +1,93 @@
+---
+title: 'Building MochaUI.js From Git'
+date: 2010-11-03
+published: true
+tags:
+  - MochaUI
+  - MooTools
+  - JavaScript
+---
+
+This one really drove me insane. I recently discovered JavaScript MooTools library & it's UI component, MochaUI. MochaUI provides a powerful & easy-to-use library for developing rich internet applications (RIAs).
+
+My issue began after finding that the version on the website was highly out of date. I was looking to use OmniGrid alongside MochaUI, but the latest released version is mochaui-0.9.7.
+
+After cloning the Git, I discovered that the new demo contained far more features, and was much better laid out than the 0.9.7 release. I also found that the JavaScript files were provided as "source" to MochaUI. This confused the hell out of me, as how would I "build" JS files?! Three hours later after scouring Google & the terrible documentation on GitHub, I managed to find [this](http://tbela99.blogspot.com/2010/05/building-mootools-on-windows-with.html) blog post which pointed me in the right direction.
+
+It turns out each MooTools component contains a `package.yml` YAML file which is fed to a PHP script called "Packager." Packager simply concatenates the source files listed in the manifest (`package.yml`) together. So much for "building" the JS. Truly it was simply a bundler.
+
+Here's the complete steps to produce a `mochaui.js` file from github.
+
+First, clone the MochaUI codebase & `cd` to the new directory:
+
+```
+[user@box:~/Desktop/test]$ git clone git://github.com/mui/mochaui
+Cloning into mochaui...
+remote: Counting objects: 11437, done.
+remote: Compressing objects: 100% (4806/4806), done.
+remote: Total 11437 (delta 6610), reused 10172 (delta 5745)
+Receiving objects: 100% (11437/11437), 3.29 MiB | 2.85 MiB/s, done.
+Resolving deltas: 100% (6610/6610), done.
+[user@box:~/Desktop/test]$ cd mochaui/
+```
+
+Next, I had to modify the `package.yml` file to point to the correct sources directory. The original was incorrect, containing the wrong path & core files. Note: You must have the source files listed in this exact order, lest nothing will work properly.
+
+My new `package.yml` file looked like so:
+
+```
+name: "MochaUI"
+
+version: "0.9.8-dev"
+
+exports: "mochaui.js"
+
+web: "[mochaui.com](http://mochaui.com/)"
+
+description: "MochaUI, A web applications user interface library"
+
+license: "[MIT License](http://mochaui.com/demo/license.txt)"
+
+copyright: "© [AUTHORS.txt]"
+
+authors:
+  - "[Chris Doty](http://polaropposite.com/)"
+  - "[Greg Houston](http://greghoustondesign.com/)"
+  - "Scott F. Frederick"
+  - "Joel Lindau"
+  - "Harry Roberts"
+
+sources:
+   - "Source/Core/Core.js"
+  - "Source/Core/Canvas.js"
+  - "Source/Core/Content.js"
+  - "Source/Core/Desktop.js"
+  - "Source/Core/Column.js"
+  - "Source/Core/Panel.js"
+  - "Source/Core/Dock.js"
+  - "Source/Core/Window.js"
+  - "Source/Core/Modal.js"
+  - "Source/Core/Themes.js"
+```
+
+Next, I proceded the use the same steps above to clone Packager from: git://github.com/kamicane/packager.
+
+Once cd'ed into my packager directory, I ensured that I had PHP installed. That's an entirely different subject, but if you have access to the `php` command, enter the PHP interactive shell with the command `php -a`
+
+```
+[user@box:~/Desktop/test/mochaui/packager]$ php -a
+Interactive shell
+
+php > require_once('packager.php');
+php > $pkg = new Packager('replace_with_path_to_package.yml');
+php > $pkg->write_from_files('mochaui.js', $pkg->get_all_files());
+php > exit
+```
+
+Once in the interactive shell, we need to include the `packager.php` file with the `require_once()` method. Once PHP knows about the Packager class, we can create a new instance.
+
+As per the documentation (https://github.com/kamicane/packager), we can see that the constructor to the Packager instance is simply the path to the `package.yml` manifest file. In my case, this is simply the parent directory. Next, the `write_from_files()` method takes two parameters, but we really only need to know about the first. This is the output file name. Considering we are building the `mochaui.js` file, that's what the parameter will be.
+
+After exiting the PHP shell, your Packager should now contain the fully "built" `mochaui.js` file.
+
+Hopefully that'll save you some time & research :).

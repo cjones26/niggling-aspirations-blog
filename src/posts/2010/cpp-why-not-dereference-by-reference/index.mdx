@@ -1,0 +1,56 @@
+---
+title: 'C++ -- Why do we not dereference when passing by reference?'
+date: 2010-10-04
+published: true
+tags:
+  - C++
+  - Pointers
+  - Ampersand operator
+  - Pass by reference
+---
+
+I recently got back into trying to teach myself C++, mostly through YouTube tutorials (this guy's are pretty good). I only went to IRC for an answer at one point, but would like to share something I found & wasn't able to Google on.
+
+Everyone should know how to use pointers when working with C++.. say we had:
+
+```cpp
+using namespace std;
+
+int main()
+{
+    int num = 5;
+    int *pnum = &num;
+    cout<<"integer num (@"<<<") = "<<*pnum;
+    return 0;
+}
+```
+
+Then we can see that integer num is set equal to five, and integer pointer pnum is set to the address of num. Normally, in C++, the `&` operator refers to the address of the object the operator is being applied to.
+
+In the case of passing values to function by reference, I was quite confused when I found that we do not in fact need to dereference the reference passed as an argument. For example:
+
+```cpp
+using namespace std;
+
+void increment_variable(int & x)
+{
+        x++;
+        return;
+}
+
+int main()
+{
+        int num = 5;
+
+        increment_variable(num);
+
+        cout<<"integer num (@"<<&num<<") = "<<
+        return 0;
+}
+```
+
+In the `increment_variable(int & x)` function, we would think that to increment the value of the `x` variable, we would need to dereference the address of the `x` variable, which has been passed as a parameter. As shown by the code, this is not in fact the case!
+
+In reality, the `&` operator when used with pointers is a completely different operator than the `&` used when passing values to functions by reference.
+
+Do not get the two confused!

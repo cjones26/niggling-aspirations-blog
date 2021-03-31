@@ -1,0 +1,19 @@
+---
+title: 'Exchange 2010 HTML Mailbox Size Report'
+date: 2011-07-11
+published: true
+tags:
+  - Microsoft Exchange
+  - Powershell
+  - Mailboxes
+  - Reporting
+---
+
+Not the prettiest thing in the world but gets the job done by printing each user's mailbox size & total items into a HTML table:
+
+```
+get-mailbox -database "Mailbox Database 1706745955" | get-mailboxstatistics  | where {$_.objectclass -eq "Mailbox"} | sort-object totalitemsize -descending | select-object @{label="User";expression={$_.DisplayName}},@{label=
+"Total Size (MB)";expression={$_.TotalItemSize.Value.ToMB()}},@{label="Items";expression={$_.ItemCount}}  | convertto-html | out-file report.htm
+```
+
+May need to modify the mailbox database name.

@@ -1,0 +1,41 @@
+---
+title: 'JavaScript Convert String to Bytes Function'
+date: 2017-07-12
+published: true
+tags:
+  - JavaScript
+---
+
+Just wanted to post a quick JavaScript convert string to bytes function just for myself, but I figured someone else may find it useful:
+
+```js
+function convertToBytes(str) {
+  var bytes = [];
+
+  for (var i = 0; i < str.length; ++i) {
+    var charCode = str.charCodeAt(i);
+    bytes = bytes.concat([charCode & 0xff, (charCode / 256) >>> 0]);
+  }
+
+  return bytes;
+}
+```
+
+And my slightly improved, ES6 compatible version:
+
+```js
+function convertToBytes(str) {
+  var bytes = [];
+
+  Array.from(str).forEach((char) => {
+    var charCode = char.charCodeAt(char);
+    bytes = bytes.concat([charCode & 0xff, (charCode / 256) >>> 0]);
+  });
+
+  return bytes;
+}
+```
+
+That funky bytes concatenation line simply enables the function to work with Unicode characters.
+
+All credit goes out to [BrunoLM at StackOverflow](https://stackoverflow.com/questions/6226189/how-to-convert-a-string-to-bytearray).

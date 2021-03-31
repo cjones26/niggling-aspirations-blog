@@ -1,0 +1,41 @@
+---
+title: 'Terminal Services Event ID 6037'
+date: 2009-11-26
+published: true
+tags:
+  - Terminal Services
+  - RemoteApp
+  - TS 2008
+  - Event ID 6037
+---
+
+I recently struggled with this one for work, after I made a change to IIS on our terminal server (Server 2008 Standard). I could not launch TS RemoteApps, as credentials were being consistently rejected, though correct. The only error I could find in the event log was along these lines:
+
+> Log Name: System
+> Source: LsaSrv
+> Date: 10/27/2008 10:46:40 PM
+> Event ID: 6037
+> Task Category: None
+> Level: Warning
+> Keywords: Classic
+> User: N/A
+> Computer: Gateway
+> Description:
+> The program lsass.exe, with the assigned process ID 572, could not authenticate locally by using the target name TERMSERV/ts.xxxx.com. The target name used is not valid. A target name should refer to one of the local computer names, for example, the DNS host name.
+
+This error may also contain address `HTTP/ts.xxxx.com`.
+
+Thanks to Chad A. Gross on the http://www.vistax64.com forums, I was pointed at a blog with a solution: http://blogs.technet.com/sbs/archive/2009/05/07/event-2436-for-sharepoint-services-3-search.aspx.
+
+Though the blog states a solution for a different problem, it worked just as well for me:
+
+Click Start, click Run, type `regedit`, and then click OK.
+In Registry Editor, locate and then click the following registry key:
+`HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0`
+Right-click `MSV1_0`, point to `New`, and then click `Multi-String Value`.
+Type `BackConnectionHostNames`, and then press ENTER.
+Right-click `BackConnectionHostNames`, and then click `Modify`.
+In the `Value` data box, type the URL mentioned in the above warning event, and then click `OK`.
+Quit Registry Editor, and then restart the IIS service.
+
+For good measure, I restarted the server and bam, the error was gone.

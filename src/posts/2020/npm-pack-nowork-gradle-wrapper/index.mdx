@@ -1,0 +1,85 @@
+---
+title: 'The npm pack command works fine manually, but refuses to work when utilizing a Gradle wrapper '
+date: 2020-09-29
+published: true
+tags:
+  - JavaScript
+  - npm pack
+  - Gradle
+---
+
+It's been a while since my lost post and since then I've moved far into the world of JavaScript development (primarily the React/Angular space). I just came across something I spent _entirely_ too long on, which I definitely want to share in case someone else makes the same mistake I did.
+
+We recently began migrating our NPM pipelines to a Jenkins / Gradle based system. With the introduction of Gradle, we needed to create an NPM wrapper script which would be able to properly produce our library artifact (via `npm pack`), via the same steps are our current build system performed, and naturally in the same order.
+
+Knowing this was the case, I went ahead and determined the steps which were currently called so I could test them manually and ensured they also produced the appropriate artifact. These steps were actually extremely simple & standard for an NPM library:
+
+- npm install
+- run build
+- npm pack
+- npm publish artifact-1.0.45.tgz --registry https://our-internal-registry.local/artifactory/api/npm/repo-artifact-npm
+
+Straight forward enough, I went ahead & developed a Gradle script which would call the first three steps in the appropriate order. Though the plugin has since been deprecated, I was already familiar with the [com.moowork.node](https://plugins.gradle.org/plugin/com.moowork.node) Gradle plugin. Knowing I didn't need much to spin up a simple script, I went ahead & developed the following:
+
+```groovy
+apply plugin: "com.moowork.node"
+
+defaultTasks 'artifactNpmPack'
+
+node {
+  download = false
+}
+
+task build {
+  dependsOn("artifactNpmPack")
+}
+
+task artifactNpmInstall(type: NpmTask) {
+  args = ['install']
+}
+
+task artifactNpmBuild(type: NpmTask) {
+  args = ['run', 'build']
+}
+
+task artifactNpmPack(type: NpmTask) {
+  args = ['pack']
+}
+```
+
+This script should, when ran as gradle build essentially run the same commands as the manual ones above with no problems.
+
+Unfortunately, I spent the next 12 hours delving into AV issues, file / folder auditing, ProcMon, and finally the NPM pack source code before determining the silly overlooked cause of my issue. What was my issue, one would ask? Well, see below (lifted from a Stack Overflow question as it's the exact same issue):
+
+> npm ERR! path c:\Temp\npm-20936-b98f84c8\tmp\fromDir-02dd5394\package.tgz
+> npm ERR! code EPERM
+> npm ERR! errno -4048
+> npm ERR! syscall unlink
+> npm ERR! Error: EPERM: operation not permitted, unlink 'c:\Temp\npm-20936-b98f84c8\tmp\fromDir-02dd5394\package.tgz'
+> npm ERR! at Error (native)
+> npm ERR! { Error: EPERM: operation not permitted, unlink 'c:\Temp\npm-20936-b98f84c8\tmp\fromDir-02dd5394\package.tgz'
+> npm ERR! at Error (native)
+> npm ERR! cause:
+> npm ERR! { Error: EPERM: operation not permitted, unlink 'c:\Temp\npm-20936-b98f84c8\tmp\fromDir-02dd5394\package.tgz'
+> npm ERR! at Error (native)
+> npm ERR! errno: -4048,
+> npm ERR! code: 'EPERM',
+> npm ERR! syscall: 'unlink',
+> npm ERR! path: 'c:\\Temp\\npm-20936-b98f84c8\\tmp\\fromDir-02dd5394\\package.tgz' },
+> npm ERR! isOperational: true,
+> npm ERR! stack: 'Error: EPERM: operation not permitted, unlink \'c:\\Temp\\npm-20936-b98f84c8\\tmp\\fromDir-02dd5394\\package.tgz\'\n at Error (native)',
+> npm ERR! errno: -4048,
+> npm ERR! code: 'EPERM',
+> npm ERR! syscall: 'unlink',
+> npm ERR! path: 'c:\\Temp\\npm-20936-b98f84c8\\tmp\\fromDir-02dd5394\\package.tgz' }
+> npm ERR!
+> npm ERR! Please try running this command again as root/Administrator.
+
+Unfortunately, the solutions which worked for others here did not work for me. After losing my mind for almost 12 hours, I discovered that I was attempting to add the `./gradle/buildOutputCleanup/buildOutputClean.lock` file into the package when running `npm pack` -- this makes sense as I didn't previously have a `.gradle` directory, and somehow it slipped my mind that it must be added to `.gitignore.`
+
+The solution was simply adding the following to `.gitignore`, and my build was successful:
+
+```
+# Gradle
+.gradle/
+```

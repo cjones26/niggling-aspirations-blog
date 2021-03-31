@@ -1,0 +1,75 @@
+---
+title: 'Compiz Fusion + Xfce 4.6 + Slackware 12.2 + NVIDIA'
+date: 2009-09-07
+published: true
+tags:
+  - LAN
+  - NIC
+---
+
+I bought a PS3 several months ago, and wanted to try streaming movies to the PS3 using something like [Mediatomb](https://wiki.archlinux.org/index.php/MediaTomb) or [PS3 Media Server](https://github.com/ps3mediaserver/ps3mediaserver) (my personal favorite).
+
+My first attempted involved transcoding & wireless..the combination resulted in endless lag & choppiness, that essentially made the movie unplayable. To resolve the issue, I decided to install a secondary NIC into my PC, to share the connection from the first NIC. This way, I could not only stream movies from my PC directly to the PS3 via crossover cable, I could also access the internet as well.
+
+To begin, ensure that your NIC has been properly installed in your kernel. A quick lspci should do the trick:
+
+> 00:00.0 Host bridge: VIA Technologies, Inc. VT8366/A/7 [Apollo KT266/A/333]
+> 00:01.0 PCI bridge: VIA Technologies, Inc. VT8366/A/7 [Apollo KT266/A/333 AGP]
+> 00:09.0 Multimedia audio controller: C-Media Electronics Inc CM8738 (rev 10)
+> 00:0a.0 Ethernet controller: ADMtek NC100 Network Everywhere Fast Ethernet 10/100 (rev 11)
+> 00:10.0 USB Controller: VIA Technologies, Inc. VT82xxxxx UHCI USB 1.1 Controller (rev 80)
+> 00:10.1 USB Controller: VIA Technologies, Inc. VT82xxxxx UHCI USB 1.1 Controller (rev 80)
+
+Boom. Now let's proceed to ensuring that IPv4 forwarding is enabled. In Slackware 12.2, we can ensure this forwarding is enabled at boot time by by navigating over to `/etc/rc.d/` & checking that the file `rc.ip_forward` has the execute permission (it's green when we type `ls`, if your bash is using colors). If not, we run the command `su -c "chmod +x rc.ip_forward"`, then the command `/etc/rc.d/rc.ip_forward start` -- the final result should be as following: Activating IPv4 packet forwarding.
+
+Next, I set a static IP on the secondary NIC as `192.168.2.2`. My other NIC (and router) are on the `192.168.1.1` subnet. Here's a quick view of my topology:
+
+```
+|Router|
+192.168.1.1
+|
+192.168.1.33 (eth1)
+|PC|
+192.168.2.1 (eth0)
+|PS3|
+192.168.2.1
+```
+
+As you can see the secondary NIC & PS3 are on a completely different subnet. This is to avoid having to add a route on my router to route packets to the PS3.
+
+My NIC configuration on the PC's secondary NIC is set as following, in my `/etc/rc.d/rc.inet1.conf`:
+
+```
+# Config information for eth0: (connected to the PS3)
+IPADDR[0]="192.168.2.1"
+NETMASK[0]="255.255.255.0"
+USE_DHCP[0]=""
+DHCP_HOSTNAME[0]=""
+
+# Config information for eth1: (connected to the LAN)
+IPADDR[1]="192.168.1.133"
+NETMASK[1]="255.255.255.0"
+USE_DHCP[1]=""
+DHCP_HOSTNAME[1]=""
+```
+
+Once you save the configuration, restart your internet services with the command `/etc/rc.d/rc.inet1 restart` -- your NIC's should now hold the proper IP addresses.
+
+Now our next step will be to create a new start-up script in `/etc/rc.d` to properly forward traffic between the two NIC's. My file is named `/etc/rc.d/rc.ps3` (appropriate, huh ;]), and contains the following:
+
+```
+#!/bin/sh
+echo "Starting PS3 services..."
+/usr/sbin/iptables -F
+/usr/sbin/iptables -t nat -F
+/usr/sbin/iptables -t mangle -F
+/usr/sbin/iptables -t nat -A POSTROUTING -o eth1 -j MASQUERADE
+/usr/sbin/iptables -A FORWARD -i eth0 -j ACCEPT
+echo "PS3 crossover forwarding enabled."
+```
+
+In this example, my external NIC (facing the LAN/internet) is `eth1`, while the NIC connected to the PS3 via crossover is `eth0`.
+
+Save the file, and set the execute bit with `chmod +x rc.ps3` ....
+
+Have fun streaming & surfing!

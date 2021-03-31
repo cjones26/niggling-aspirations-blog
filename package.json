@@ -1,7 +1,7 @@
 {
   "name": "niggling-aspirations-blog",
   "private": true,
-  "description": "The technical blog of C. L. Jones.  Hopefully a headache helper",
+  "description": "The technical blog of C. L. Jones.  Hopefully a headache helper.",
   "version": "0.1.0",
   "license": "0BSD",
   "scripts": {
@@ -13,13 +13,26 @@
     "lint:fix": "npm run lint --fix",
     "prepare": "husky install",
     "start": "npm run develop",
+    "restart": "kill-port --port 8000 && gatsby develop",
     "serve": "gatsby serve",
     "test": "echo \"Write tests! -> https://gatsby.dev/unit-testing\" && exit 1",
-    "type-check": "tsc"
+    "type-check": "tsc",
+    "watch": "npm-watch restart"
+  },
+  "watch": {
+    "restart": "gatsby-node.js"
   },
   "dependencies": {
-    "gatsby": "3.0.1",
+    "@mdx-js/mdx": "1.6.22",
+    "@mdx-js/react": "1.6.22",
+    "@types/react-dom": "17.0.3",
+    "gatsby": "3.1.2",
+    "gatsby-plugin-mdx": "2.1.0",
+    "gatsby-plugin-root-import": "2.0.6",
+    "gatsby-plugin-sharp": "3.1.2",
     "gatsby-plugin-typescript": "3.1.0",
+    "gatsby-remark-images": "4.1.1",
+    "gatsby-source-filesystem": "3.1.0",
     "react": "17.0.1",
     "react-dom": "17.0.1"
   },
@@ -28,7 +41,7 @@
     "@commitlint/config-conventional": "12.0.1",
     "@typescript-eslint/eslint-plugin": "4.19.0",
     "@typescript-eslint/parser": "4.19.0",
-    "cz-conventional-changelog": "^3.3.0",
+    "cz-conventional-changelog": "3.3.0",
     "eslint": "7.23.0",
     "eslint-config-airbnb-typescript": "12.3.1",
     "eslint-config-prettier": "8.1.0",
@@ -38,7 +51,9 @@
     "eslint-plugin-react": "7.23.1",
     "eslint-plugin-react-hooks": "4.2.0",
     "husky": "5.2.0",
+    "kill-port": "1.6.1",
     "lint-staged": "10.5.4",
+    "npm-watch": "0.9.0",
     "prettier": "2.2.1",
     "typescript": "4.2.3"
   },

@@ -1,0 +1,55 @@
+---
+title: 'How to programmatically fetch an NPM package's latest version with Node JS'
+date: 2021-01-27
+published: true
+tags:
+  - JavaScript
+  - npm
+---
+
+We have several front-end modules, all of which utilize a shared enterprise UI/UX library. We needed a way to keep this shared library's dependency version in sync, therefore, we needed a way to programmatically pull the latest library package version from our local registry.
+
+I am not a big fan of utilizing dependencies to do something which we can do ourselves with minimal effort. Therefore, I put together a quick function (with some help from the npmview project) which allows us to pull the latest package version using the undocumented npm API. Note that, because it's using the undocumented API that it could break at any time. I've tested the function with npm version 6.14.10 & 6.14.11 and it seems to work fine.
+
+```js
+const npm = require('npm');
+
+function getLatestPackageVersion() {
+  return new Promise(function (resolve, reject) {
+    npm.load({ loglevel: 'silent' }, function (err) {
+      if (err) {
+        reject(`Failed to initialize NPM: ${err.toString()}`);
+
+        return;
+      }
+
+      // A hack to shut the NPM registry the hell up -- taken from npmview -- may not always work
+      if (npm && npm.registry && npm.registry.log && npm.registry.log.level) {
+        npm.registry.log.level = 'silent';
+      }
+
+      // Replace lodash with the package you'd like to fetch the latest version of
+      npm.commands.show(['lodash', 'version'], true, function (err, data) {
+        if (err) {
+          reject(`Failed to get latest package version: ${err.toString()}`);
+
+          return;
+        }
+
+        // Resolve with the latest package version
+        resolve(Object.keys(data)[0]);
+      });
+    });
+  });
+}
+
+async function main() {
+  try {
+    console.log('Latest version: ', await getLatestPackageVersion());
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+}
+
+main();
+```

@@ -1,0 +1,28 @@
+---
+title: 'PsExec -- Error deriving session key: The system cannot find the file specified'
+date: 2015-04-03
+published: true
+tags:
+  - PSExec
+---
+
+So this one's been driving me insane for a while (especially since I figured it out a while ago and never documented the solution). On some systems I would only be able to get PsExec working half the time...the other half the time I'd receive this infuriating error:
+
+```
+C:\Users\CJ\Downloads>psexec \\chrlcltsbx803 -i -s cmd.exe
+
+PsExec v2.11 - Execute processes remotely
+Copyright (C) 2001-2014 Mark Russinovich
+Sysinternals - www.sysinternals.com
+
+Error deriving session key:
+The system cannot find the file specified.
+```
+
+So after running ProcMon to determine what file "couldn't be found," I realized--I was running PsExec as my elevated administrative user without a profile. As in:
+
+`runas /noprofile /user:chrl\CJ cmd.exe`
+
+Unfortunately, this doesn't seem to work due to something with `HKCU` cryptographic keys.
+
+Either way, the issue went away once running under my elevated account without the `/noprofile` switch. Hope this saves someone a headache.

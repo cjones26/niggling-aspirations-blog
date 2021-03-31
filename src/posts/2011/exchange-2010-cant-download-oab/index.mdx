@@ -1,0 +1,29 @@
+---
+title: 'Exchange 2010 - Can't Download OAB'
+date: 2011-01-31
+published: true
+tags:
+  - Microsoft Exchange
+  - Migration
+  - Offline Address Book
+---
+
+During a migration from Exchange 2007->Exchange 2010, I could not figure out why my OAB would not download after deleting & re-creating it.
+
+Originally, we were having an issue where Outlook 2003 clients would throw "Task 'Microsoft Exchange Server' reported error (0x8004010F): "The operation failed. An object could not be found." when attempting to send/receive. I tracked the issue down to the OAB after a short Google search.
+
+Our OAB virtual directory was actually empty, and there was no GUID folder before I found the solution below.
+
+When attempting to download the OAB directly from Exchange 2010, one would receive the message:
+
+> An error occurred while opening the Microsoft Exchange Offline Address Book files," and event ID 27 (source: Outlook),
+
+"The operation failed," would be recorded in the application event log.
+
+This post provided the solution. After running the command in Exchange Management Console on the 2010 server:
+
+```
+Update-FileDistributionService
+```
+
+I was able to download the OAB successfully from Outlook 2010.

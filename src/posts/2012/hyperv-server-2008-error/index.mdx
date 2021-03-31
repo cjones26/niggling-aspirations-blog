@@ -1,0 +1,18 @@
+---
+title: 'Hyper-V Server 2008 - Error: 'The requested operation could not be completed due to a file system limitation''
+date: 2012-06-12
+published: true
+tags:
+  - Microsoft Hyper-V
+  - Windows Server 2008
+---
+
+When attempting to attach a VHD (or simply create a new virtual machine for that matter) by utilizing the Hyper-V manager on a remote computer (to manage Hyper-V Server 2008) I was having issues--I was receiving the error:
+
+> Error: 'The requested operation could not be completed due to a file system limitation'
+
+Which was not too simple to figure out!
+
+Turns out I was attempting to use a UNC path to point to the VHD (as I figured I would have to). This is not the case--instead, in the management console on the remote machine I needed to use the local path on my actual Hyper-V server.
+
+This resolved my issue.

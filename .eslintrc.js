@@ -15,5 +15,7 @@ module.exports = {
     sourceType: 'module',
   },
   plugins: ['react', '@typescript-eslint', 'prettier'],
-  rules: {},
+  rules: {
+    'react/prop-types': 'off',
+  },
 };

@@ -1,0 +1,15 @@
+---
+title: 'Microsoft KB 3109103 Breaks WebSockets '
+date: 2015-12-14
+published: true
+tags:
+  - Microsoft Update
+  - KB 3109103
+  - Websockets
+---
+
+Recently my gulp live reload broke like so:
+
+> ws://x.x.x.x:8080/LiveReload' failed: Error during WebSocket handshake: Unexpected response code: 200
+
+Even though nothing changed, I noted patches had been installed over the weekend. After looking through which files were updated, I noticed that KB 3109103 patched `Wshrm.dll`. I was unable to find much useful information on this DLL, but after looking into the description it appeared to have a lot to do with sockets: Windows Sockets Helper DLL for PGM.

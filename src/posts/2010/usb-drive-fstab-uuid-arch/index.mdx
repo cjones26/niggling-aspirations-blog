@@ -1,0 +1,53 @@
+---
+title: 'USB Drive Fstab UUID (Arch Linux)'
+date: 2010-07-18
+published: true
+tags:
+  - Linux
+  - Arch Linux
+  - UUID
+  - Removable drives
+---
+
+Just had an issue where I could not mount my USB drive at boot time I was getting an error along the lines of `UUID=blah not found`...I previously had performed the standard `sudo blkid` and received the following output:
+
+> [corte@ashbox ~]$ sudo blkid
+> Password:
+> /dev/sda1: LABEL="Boot" UUID="3a31d197-0436-4b87-9f06-b03080a3772f" TYPE="ext2"
+> /dev/sda2: UUID="ea73d633-0f71-43a3-9101-6461f19b1222" TYPE="swap"
+> /dev/sda3: LABEL="Root" UUID="63b1459a-3ee6-4d7a-9afa-9ad40db800bd" TYPE="ext4"
+> /dev/sda4: LABEL="Home" UUID="00e59ee8-019b-4ad2-9171-e8501a1022c3" TYPE="ext4"
+> /dev/sdb1: LABEL="Elements" UUID="7da36762-56c3-471d-bfa1-5b4895bfa0d7" TYPE="xfs"
+
+Noting the UUID of my external USB drive (Elements), I added the following line into my fstab file:
+
+```
+UUID=7da36762-56c3-471d-bfa1-5b4895bfa0d7 /media/Elements auto defaults 0 0
+```
+
+Everything went dandy with a `mount -a` yet at the next reboot, I received an error stating that `the device with the UUID 7da..could not be found.` A bit of research lead me to the solution...
+Including `usb` before `filesystems` in the hooks section of your `/etc/mkinitcpio.conf` file:
+
+```
+HOOKS="base udev autodetect pata scsi sata usb filesystems v86d"
+```
+
+Regenerate your mkinitcpio file with:
+
+```
+sudo mkinitcpio -g kernel26.img
+```
+
+Then be sure to make a backup of your old `/boot/kernel26.img`
+
+```
+sudo mv /boot/kernel26.img /boot/kernel26.img.bak
+```
+
+Finally, copy your new `kernel26.img` to `/boot`.
+
+```
+cp kernel26.img /boot/kernel26.img
+```
+
+Now reboot and your external drive should be mounted automatically with no issues.

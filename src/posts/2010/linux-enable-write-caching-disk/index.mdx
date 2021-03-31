@@ -1,0 +1,30 @@
+---
+title: 'Linux enable Write-Caching on disk'
+date: 2010-09-24
+published: true
+tags:
+  - Linux
+  - EXT4
+  - VirtualBox
+  - Disk write cache
+---
+
+When booting a VM recently, I received the error message below regarding I/O writecaching & virtual hard disk corruption:
+
+![VirtualBox error](./screenshot.png)
+
+After Googling for a bit, I found that the first thing to check with this error is whether I/O write caching is enabled on the VM. In my case, it was.
+
+Next, a lot of the posts I was reading were stating the corruption was occuring on ext4 partitions. I assumed that the write caching was a filesystem option. I had heard of the disk write cache when working on Windows servers, but never really knew the specifics.
+
+After a bit more research, I found disk write-caching was actually a drive option that could be set with the `hdparm` command. It will improve performance by 10-20%, but can also cause system instability.
+
+To enable write-caching on the drive, I ran command:
+
+> [user@box ~]$ sudo hdparm -W1 /dev/sda
+> Password:
+> /dev/sda:
+> setting drive write-caching to 1 (on)
+> write-caching = 1 (on)
+
+And rebooted the machine, effectively taking care of the error.

@@ -1,10 +1,11 @@
 ---
-title: 'Cinnamon boots to black screen with cursor, then restarts in a loop, the logs reference systemd / dbus timeout'
+title: Cinnamon boots to black screen with cursor, then restarts in a loop, the logs reference systemd / dbus timeout
 date: 2020-10-19
 published: true
 tags:
-  - Linux
-  - Cinnamon
+  - 'Linux'
+  - 'Cinnamon'
+  - '/var/run'
 ---
 
 I've been running Linux Mint now for ~10 years after earlier forays into Gentoo, Slackware & Arch. Back when I was a teenager and I didn't have the cash to purchase new hardware and needed to squeeze every inch of performance out of my machines, distributions which gave me fine-grained control of what was running in the kernel & user space not only gave me this last bit of performance, but also taught me a lot about running Linux & GNU in general.
@@ -30,7 +31,7 @@ Digging into my syslog also showed multiple service start failures, all pointing
 
 > Oct 18 16:13:14 hostname accounts-daemon[1173]: error getting polkit authority: Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.PolicyKit1': timed out (service_start_timeout=25000ms)
 > Oct 18 16:13:14 hostname udisksd[1164]: Error initializing polkit authority: Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.PolicyKit1': timed out (service_start_timeout=25000ms) (g-dbus-error-quark, 20)
-> Oct 18 16:13:14 hostname ModemManager[1172]: <warn> failed to create PolicyKit authority: 'Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.PolicyKit1': timed out (service_start_timeout=25000ms)'
+> Oct 18 16:13:14 hostname ModemManager[1172]: &gt;warn&lt; failed to create PolicyKit authority: 'Error initializing authority: Error calling StartServiceByName for org.freedesktop.PolicyKit1: GDBus.Error:org.freedesktop.DBus.Error.TimedOut: Failed to activate service 'org.freedesktop.PolicyKit1': timed out (service_start_timeout=25000ms)'
 
 After doing some research I came across some posts regarding the transition away from /var/run/dbus as a standalone folder, and rather a symlink to /run/dbus:
 
@@ -46,4 +47,4 @@ After re-creating the symlink with the following command and rebooting, everythi
 ln -s /run /var/run
 ```
 
-_Note: After writing this blog post, I realized that the root cause of the issue & the solution were clearly documented on the Linux Mint Releases & Announcements form here: https://forums.linuxmint.com/viewtopic.php?t=331605_
+_Note: After writing this blog post, I realized that the root cause of the issue & the solution were clearly documented on the Linux Mint Releases & Announcements form here: https://forums.linuxmint.com/viewtopic.php?t=331605_.

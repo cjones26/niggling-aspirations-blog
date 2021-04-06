@@ -5,6 +5,7 @@ export interface SiteMetadata {
     siteMetadata: {
       title: string;
       description: string;
+      url: string;
     };
   };
 }
@@ -16,6 +17,7 @@ export default () => {
         siteMetadata {
           title
           description
+          url
         }
       }
     }

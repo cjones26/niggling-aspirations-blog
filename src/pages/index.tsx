@@ -1,5 +1,7 @@
 import React from 'react';
 import { graphql, Link } from 'gatsby';
+import useSiteMetadata from 'hooks/useSiteMetadata';
+import Layout from 'components/Layout';
 
 export interface Node {
   id: string;
@@ -29,19 +31,13 @@ export interface HomePagePropsWithData {
 
 export const query: void = graphql`
   query HomePageQuery {
-    site {
-      siteMetadata {
-        title
-        description
-      }
-    }
     allMdx(sort: { fields: [frontmatter___date], order: DESC }, filter: { frontmatter: { published: { eq: true } } }) {
       nodes {
         id
         excerpt(pruneLength: 250)
         frontmatter {
           title
-          date
+          date(formatString: "MMMM Do, YYYY")
         }
         fields {
           slug
@@ -52,23 +48,25 @@ export const query: void = graphql`
 `;
 
 export default function HomePage({ data }: HomePagePropsWithData) {
+  const { title, description } = useSiteMetadata();
+
   return (
-    <>
+    <Layout>
       <div>
-        <h1>{data.site.siteMetadata.title}</h1>
-        <p>{data.site.siteMetadata.description}</p>
+        <h1>{title}</h1>
+        <h2>{description}</h2>
       </div>
       <div>
         {data.allMdx.nodes.map((node: Node) => (
           <React.Fragment key={node.id}>
             <Link to={node.fields.slug}>
-              <h1>{node.frontmatter.title}</h1>
+              <h3>{node.frontmatter.title}</h3>
             </Link>
             <p>{node.frontmatter.date}</p>
             <p>{node.excerpt}</p>
           </React.Fragment>
         ))}
       </div>
-    </>
+    </Layout>
   );
 }

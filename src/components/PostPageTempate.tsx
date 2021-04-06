@@ -1,8 +1,9 @@
 import React from 'react';
-import { graphql } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { MDXProvider } from '@mdx-js/react';
 import CodeBlock from './CodeBlock';
+import Layout from './Layout';
 
 export interface PostPageTemplateWithData {
   data: {
@@ -22,7 +23,7 @@ export const query: void = graphql`
       body
       frontmatter {
         title
-        date(formatString: "YYYY MMMM Do")
+        date(formatString: "MMMM Do, YYYY")
       }
     }
   }
@@ -36,14 +37,15 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
   const { frontmatter, body } = data.mdx;
 
   return (
-    <>
-      <div>
-        <h1>{frontmatter.title}</h1>
-        <p>{frontmatter.date}</p>
-        <MDXProvider components={components}>
-          <MDXRenderer>{body}</MDXRenderer>
-        </MDXProvider>
-      </div>
-    </>
+    <Layout>
+      <Link className="all-articles" to="/">
+        All Articles
+      </Link>
+      <h1 className="text-center">{frontmatter.title}</h1>
+      <MDXProvider components={components}>
+        <MDXRenderer>{body}</MDXRenderer>
+      </MDXProvider>
+      <p className="italic">Published {frontmatter.date}</p>
+    </Layout>
   );
 }

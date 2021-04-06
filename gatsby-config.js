@@ -10,6 +10,7 @@ module.exports = {
   siteMetadata: {
     title: `Niggling Aspirations`,
     description: `The technical blog of C. L. Jones.  Hopefully a headache helper.`,
+    url: 'https://nigglingaspirations.com',
   },
   plugins: [
     'gatsby-plugin-typescript',
@@ -17,6 +18,7 @@ module.exports = {
       resolve: 'gatsby-plugin-root-import',
       options: {
         src: path.join(__dirname, 'src'),
+        components: path.join(__dirname, 'src/components'),
         hooks: path.join(__dirname, 'src/hooks'),
         pages: path.join(__dirname, 'src/pages'),
         posts: path.join(__dirname, 'src/posts'),
@@ -42,5 +44,7 @@ module.exports = {
         path: `${__dirname}/src/posts`,
       },
     },
+    'gatsby-plugin-postcss',
+    'gatsby-plugin-react-helmet',
   ],
 };

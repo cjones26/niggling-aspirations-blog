@@ -20,7 +20,7 @@
     "watch": "npm-watch restart"
   },
   "watch": {
-    "restart": "gatsby-node.js"
+    "restart": "gatsby-*.js"
   },
   "dependencies": {
     "@mdx-js/mdx": "1.6.22",

@@ -14,7 +14,7 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
   return (
     <div>
       <Helmet>
-        <html lang="en" className="bg-white dark:bg-gray-900" />
+        <html lang="en" />
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta property="og:site_name" content={title} />

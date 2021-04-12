@@ -1,7 +1,8 @@
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Highlight, { defaultProps, Language } from 'prism-react-renderer';
 import theme from 'prism-react-renderer/themes/vsLight';
+import darkTheme from 'prism-react-renderer/themes/palenight';
 
 interface CodeBlockProps {
   children: {
@@ -16,11 +17,16 @@ interface CodeBlockProps {
 export default ({ children }: CodeBlockProps) => {
   // Pull the className
   const language: Language | string = children.props.className?.replace(/language-/, '') || '';
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    setIsDarkMode(document.documentElement.classList.contains('dark'));
+  }, []);
 
   return (
     <Highlight
       Prism={defaultProps.Prism}
-      theme={theme}
+      theme={isDarkMode ? darkTheme : theme}
       code={children.props.children.trim()}
       language={language as Language}
     >

@@ -4,6 +4,7 @@ import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { MDXProvider } from '@mdx-js/react';
 import CodeBlock from './CodeBlock';
 import Layout from './Layout';
+import LightDarkToggle from './LightDarkToggle';
 
 export interface PostPageTemplateWithData {
   data: {
@@ -38,9 +39,12 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
 
   return (
     <Layout>
-      <Link className="all-articles" to="/">
-        All Articles
-      </Link>
+      <div className="flex">
+        <Link className="all-articles" to="/">
+          All Articles
+        </Link>
+        <LightDarkToggle />
+      </div>
       <h1 className="text-center">{frontmatter.title}</h1>
       <MDXProvider components={components}>
         <MDXRenderer>{body}</MDXRenderer>

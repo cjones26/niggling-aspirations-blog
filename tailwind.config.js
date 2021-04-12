@@ -3,10 +3,17 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 /** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
 module.exports = {
   purge: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
-  darkMode: 'media',
+  darkMode: 'class',
   important: true,
   theme: {
     extend: {
+      colors: {
+        'midnight-express': {
+          light: '#000033',
+          DEFAULT: '#000033',
+          dark: '#000033',
+        },
+      },
       fontFamily: {
         sans: ['Lato', ...defaultTheme.fontFamily.sans],
       },
@@ -26,7 +33,7 @@ module.exports = {
         light: {
           css: [
             {
-              color: theme('colors.gray.400'),
+              color: theme('colors.gray.100'),
               '[class~="lead"]': {
                 color: theme('colors.gray.300'),
               },

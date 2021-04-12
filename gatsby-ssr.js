@@ -9,7 +9,7 @@ exports.onRenderBody = ({ setHeadComponents, setBodyAttributes }) => {
 
   setHeadComponents([
     <script
-      key="darkmode"
+      key="theme"
       dangerouslySetInnerHTML={{
         __html: `(function() {  
             function setTheme(theme) {
@@ -20,17 +20,10 @@ exports.onRenderBody = ({ setHeadComponents, setBodyAttributes }) => {
               }
             };
 
-            window.__setPreferredTheme = function(theme) {
-              setTheme(theme);
-              try {
-                localStorage.setItem('color-theme', theme);
-              } catch (e) {}
-            };
-
             let preferredTheme;
 
             try {
-              preferredTheme = localStorage.getItem('color-theme');
+              preferredTheme = localStorage.getItem('theme');
             } catch (e) {}
 
             let darkQuery = window.matchMedia('(prefers-color-scheme: dark)');

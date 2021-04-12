@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.dark:midnight-express {
-  color: #000033;
-}
-
 .main-content {
   @apply container
     mx-auto
@@ -56,7 +52,12 @@
 }
 
 .theme-toggler {
-  @apply block mx-auto lg:fixed lg:top-8 lg:right-8;
+  @apply block 
+    mx-auto my-5
+    lg:fixed
+    lg:top-8
+    lg:right-8
+    lg:my-0;
 }
 
 .toggle {

@@ -2,7 +2,7 @@ const defaultTheme = require('tailwindcss/defaultTheme');
 
 /** @type {import("@types/tailwindcss/tailwind-config").TailwindConfig } */
 module.exports = {
-  purge: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
+  purge: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './gatsby-ssr.js'],
   darkMode: 'class',
   important: true,
   theme: {

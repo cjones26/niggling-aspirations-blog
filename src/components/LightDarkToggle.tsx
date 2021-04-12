@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
 import Themes from 'constants/Themes';
 
-declare global {
-  interface Window {
-    theme: string;
-  }
-}
-
-const getTheme = () => {
-  if (typeof window !== `undefined`) {
-    return window.theme === Themes.DARK ? Themes.DARK : Themes.LIGHT;
-  }
-
-  return Themes.LIGHT;
-};
+const getTheme = () => (document.documentElement.classList.contains(Themes.DARK) ? Themes.DARK : Themes.LIGHT);
 
 const ToggleMode = () => {
   const [theme, setTheme] = useState(getTheme());

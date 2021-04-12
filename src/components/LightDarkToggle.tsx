@@ -1,16 +1,32 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, ChangeEvent } from 'react';
 import Themes from 'constants/Themes';
 
-const getTheme = () => (document.documentElement.classList.contains(Themes.DARK) ? Themes.DARK : Themes.LIGHT);
-
 const ToggleMode = () => {
-  const [theme, setTheme] = useState(getTheme());
-  const handleToggle = () => {
-    const isDark = getTheme() === Themes.DARK;
+  const hasRenderedRef = useRef(false);
+  const [theme, setTheme] = React.useState<Themes>();
+  const handleToggle = (event: ChangeEvent<HTMLInputElement>) => {
+    const newTheme: Themes = event.target.checked ? Themes.LIGHT : Themes.DARK;
 
-    document.documentElement.classList.toggle('dark');
-    setTheme(isDark ? Themes.LIGHT : Themes.DARK);
+    // Update React theme state
+    setTheme(newTheme);
+
+    // Update localStorage
+    localStorage.setItem('theme', String(newTheme));
+
+    // Update our classList
+    window.document.documentElement.classList.toggle('dark');
   };
+
+  useEffect(() => {
+    hasRenderedRef.current = true;
+    const initialTheme = window.document.documentElement.classList.contains(Themes.DARK) ? Themes.DARK : Themes.LIGHT;
+    setTheme(initialTheme);
+  }, []);
+
+  // Don't render anything if we don't have a theme set in our context yet
+  if (!hasRenderedRef.current) {
+    return null;
+  }
 
   return (
     <div className="theme-toggler">

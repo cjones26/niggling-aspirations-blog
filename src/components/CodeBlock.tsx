@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useEffect, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import Highlight, { defaultProps, Language } from 'prism-react-renderer';
 import theme from 'prism-react-renderer/themes/vsLight';
 import darkTheme from 'prism-react-renderer/themes/palenight';
@@ -19,7 +19,7 @@ export default ({ children }: CodeBlockProps) => {
   const language: Language | string = children.props.className?.replace(/language-/, '') || '';
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setIsDarkMode(document.documentElement.classList.contains('dark'));
   }, []);
 

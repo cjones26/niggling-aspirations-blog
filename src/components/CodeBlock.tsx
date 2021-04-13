@@ -1,8 +1,9 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Highlight, { defaultProps, Language } from 'prism-react-renderer';
-import theme from 'prism-react-renderer/themes/vsLight';
+import lightTheme from 'prism-react-renderer/themes/vsLight';
 import darkTheme from 'prism-react-renderer/themes/palenight';
+import Themes from 'constants/Themes';
 
 interface CodeBlockProps {
   children: {
@@ -14,19 +15,27 @@ interface CodeBlockProps {
   className: string;
 }
 
+export const getInitialTheme = (): Themes => {
+  if (typeof window !== `undefined`) {
+    return window.document.documentElement.classList.contains(Themes.DARK) ? Themes.DARK : Themes.LIGHT;
+  }
+
+  return Themes.LIGHT;
+};
+
 export default ({ children }: CodeBlockProps) => {
   // Pull the className
   const language: Language | string = children.props.className?.replace(/language-/, '') || '';
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useLayoutEffect(() => {
-    setIsDarkMode(document.documentElement.classList.contains('dark'));
-  }, []);
+  const themes = {
+    [Themes.DARK]: darkTheme,
+    [Themes.LIGHT]: lightTheme,
+  };
+  const [theme] = useState<Themes>(getInitialTheme());
 
   return (
     <Highlight
       Prism={defaultProps.Prism}
-      theme={isDarkMode ? darkTheme : theme}
+      theme={themes[theme]}
       code={children.props.children.trim()}
       language={language as Language}
     >

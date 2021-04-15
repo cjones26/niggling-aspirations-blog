@@ -5,6 +5,7 @@ import { MDXProvider } from '@mdx-js/react';
 import CodeBlock from './CodeBlock';
 import Layout from './Layout';
 import LightDarkToggle from './LightDarkToggle';
+import ThemeContextProvider from './ThemeContext';
 
 export interface PostPageTemplateWithData {
   data: {
@@ -38,18 +39,20 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
   const { frontmatter, body } = data.mdx;
 
   return (
-    <Layout>
-      <div className="flex">
-        <Link className="all-articles" to="/">
-          All Articles
-        </Link>
-        <LightDarkToggle />
-      </div>
-      <h1 className="text-center">{frontmatter.title}</h1>
-      <MDXProvider components={components}>
-        <MDXRenderer>{body}</MDXRenderer>
-      </MDXProvider>
-      <p className="italic">Published {frontmatter.date}</p>
-    </Layout>
+    <ThemeContextProvider>
+      <Layout>
+        <div className="flex">
+          <Link className="all-articles" to="/">
+            All Articles
+          </Link>
+          <LightDarkToggle />
+        </div>
+        <h1 className="text-center">{frontmatter.title}</h1>
+        <MDXProvider components={components}>
+          <MDXRenderer>{body}</MDXRenderer>
+        </MDXProvider>
+        <p className="italic">Published {frontmatter.date}</p>
+      </Layout>
+    </ThemeContextProvider>
   );
 }

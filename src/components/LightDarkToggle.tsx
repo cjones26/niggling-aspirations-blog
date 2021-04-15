@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, ChangeEvent } from 'react';
+import React, { useEffect, useContext, useRef, ChangeEvent } from 'react';
 import Themes from 'constants/Themes';
+import { ThemeContext } from './ThemeContext';
 
 const ToggleMode = () => {
   const hasRenderedRef = useRef(false);
-  const [theme, setTheme] = React.useState<Themes>();
+  const { theme, setTheme } = useContext(ThemeContext);
   const handleToggle = (event: ChangeEvent<HTMLInputElement>) => {
     const newTheme: Themes = event.target.checked ? Themes.LIGHT : Themes.DARK;
 
@@ -19,9 +20,7 @@ const ToggleMode = () => {
 
   useEffect(() => {
     hasRenderedRef.current = true;
-    const initialTheme = window.document.documentElement.classList.contains(Themes.DARK) ? Themes.DARK : Themes.LIGHT;
-    setTheme(initialTheme);
-  }, []);
+  });
 
   // Don't render anything if we don't have a theme set in our context yet
   if (!hasRenderedRef.current) {

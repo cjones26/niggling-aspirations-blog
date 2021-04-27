@@ -52,10 +52,10 @@ export default function HomePage({ data }: HomePagePropsWithData) {
 
   return (
     <Layout>
-      <div>
+      <header role="banner">
         <h1>{title}</h1>
         <h2>{description}</h2>
-      </div>
+      </header>
       <div>
         {data.allMdx.nodes.map((node: Node) => (
           <React.Fragment key={node.id}>

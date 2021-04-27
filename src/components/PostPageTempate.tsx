@@ -47,11 +47,15 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
           </Link>
           <LightDarkToggle />
         </div>
-        <h1 className="text-center">{frontmatter.title}</h1>
-        <MDXProvider components={components}>
-          <MDXRenderer>{body}</MDXRenderer>
-        </MDXProvider>
-        <p className="italic">Published {frontmatter.date}</p>
+        <article>
+          <header>
+            <h1 className="text-center">{frontmatter.title}</h1>
+          </header>
+          <MDXProvider components={components}>
+            <MDXRenderer>{body}</MDXRenderer>
+          </MDXProvider>
+          <p className="italic">Published {frontmatter.date}</p>
+        </article>
       </Layout>
     </ThemeContextProvider>
   );

@@ -12,16 +12,29 @@
     lg:pt-14
     xl:pt-14
     2xl:pt-14
-    lg:pb-5
-    xl:pb-5
-    2xl:pb-5
     lg:max-w-2xl
     prose
     lg:prose-lg
     dark:prose-light
     lg:dark:prose-lg
+    whitespace-pre-wrap
+    break-words
     transition
     duration-500;
+}
+
+.footer-content {
+  @apply flex 
+  flex-col
+  justify-center 
+  items-center
+  text-center
+  text-sm
+  w-full
+  max-w-3xl
+  mx-auto 
+  p-4
+  dark:text-white;
 }
 
 .all-articles {
@@ -52,9 +65,10 @@
     !important;
 }
 
-blockquote {
-  @apply whitespace-pre-wrap
-    break-words;
+/* Stop the stretching of images but allow proper sizing of overflow lines */
+.gatsby-resp-image-wrapper {
+  @apply whitespace-normal
+    break-normal;
 }
 
 .theme-toggler {

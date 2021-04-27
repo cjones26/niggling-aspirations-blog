@@ -1,10 +1,6 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useContext } from 'react';
+import React from 'react';
 import Highlight, { defaultProps, Language } from 'prism-react-renderer';
-import lightTheme from 'prism-react-renderer/themes/vsLight';
-import darkTheme from 'prism-react-renderer/themes/palenight';
-import Themes from 'constants/Themes';
-import { ThemeContext } from './ThemeContext';
 
 interface CodeBlockProps {
   children: {
@@ -16,31 +12,14 @@ interface CodeBlockProps {
   className: string;
 }
 
-export const getTheme = (): Themes => {
-  if (typeof window !== `undefined`) {
-    return window.document.documentElement.classList.contains(Themes.DARK) ? Themes.DARK : Themes.LIGHT;
-  }
-
-  return Themes.LIGHT;
-};
-
 export default ({ children }: CodeBlockProps) => {
+  // Pull the className
   const language: Language | string = children.props.className?.replace(/language-/, '') || '';
-  const { theme } = useContext(ThemeContext);
-  const themes = {
-    [Themes.DARK]: darkTheme,
-    [Themes.LIGHT]: lightTheme,
-  };
 
   return (
-    <Highlight
-      Prism={defaultProps.Prism}
-      theme={themes[theme ?? Themes.LIGHT]}
-      code={children.props.children.trim()}
-      language={language as Language}
-    >
+    <Highlight Prism={defaultProps.Prism} code={children.props.children.trim()} language={language as Language}>
       {({ className, style, tokens, getLineProps, getTokenProps }) => (
-        <pre key={theme} className={className} style={{ ...style }}>
+        <pre className={className} style={{ ...style }}>
           {tokens.map((line, index) => {
             const lineProps = getLineProps({ line, key: index });
             return (

@@ -15,6 +15,7 @@
     lg:pb-5
     xl:pb-5
     2xl:pb-5
+    lg:max-w-2xl
     prose
     lg:prose-lg
     dark:prose-light
@@ -49,6 +50,11 @@
     dark:text-white
     dark:hover:text-indigo-200
     !important;
+}
+
+blockquote {
+  @apply whitespace-pre-wrap
+    break-words;
 }
 
 .theme-toggler {

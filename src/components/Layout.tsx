@@ -24,6 +24,11 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
         <meta name="twitter:description" content={description} />
       </Helmet>
       <div className="main-content">{children}</div>
+      <p className="text-center text-xsmall dark:text-white my-2">
+        <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="noreferrer">
+          ©{new Date().getFullYear()} Charles Jones - CC BY 4.0.
+        </a>
+      </p>
     </div>
   );
 }

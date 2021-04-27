@@ -1,5 +1,4 @@
 /* eslint-disable react/jsx-filename-extension, react/no-danger */
-
 const React = require('react');
 
 exports.onRenderBody = ({ setHeadComponents, setBodyAttributes }) => {

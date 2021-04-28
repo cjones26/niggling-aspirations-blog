@@ -54,7 +54,7 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
           <MDXProvider components={components}>
             <MDXRenderer>{body}</MDXRenderer>
           </MDXProvider>
-          <p className="italic">Published {frontmatter.date}</p>
+          <p className="published italic">Published {frontmatter.date}</p>
         </article>
       </Layout>
     </ThemeContextProvider>

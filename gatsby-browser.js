@@ -1,6 +1,6 @@
 import Prism from 'prism-react-renderer/prism';
 import '@fontsource/lato';
-import './src/styles/tailwind.css';
+import './src/styles/main.css';
 import './src/styles/prism-vslight-theme.css';
 import './src/styles/prism-palenight-theme.css';
 

@@ -87,6 +87,7 @@
   },
   "config": {
     "commitizen": {
+      "disableScopeLowerCase": true,
       "path": "./node_modules/cz-conventional-changelog"
     }
   }

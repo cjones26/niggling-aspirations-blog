@@ -2,12 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  .leading-12 {
-    line-height: 3rem;
-  }
-}
-
 .main-content {
   @apply container
     mx-auto
@@ -30,7 +24,12 @@
 }
 
 .published {
-  @apply mb-0 !important;
+  @apply mb-0 
+    text-center !important;
+}
+
+.post-header-divider {
+  @apply my-3 !important;
 }
 
 .footer-content {
@@ -83,7 +82,9 @@
   text-gray-800
   hover:text-yellow-500 
   dark:text-gray-400 
-  dark:hover:text-yellow-500;
+  dark:hover:text-yellow-500
+  transition
+  duration-500;
 }
 
 .sm-linkedin {
@@ -92,7 +93,9 @@
     text-gray-800
     hover:text-blue-900 
     dark:text-gray-400 
-    dark:hover:text-blue-300;
+    dark:hover:text-blue-300
+    transition
+    duration-500;
 }
 
 .sm-github {
@@ -101,7 +104,9 @@
   text-gray-800 
   hover:text-gray-500 
   dark:text-gray-400 
-  dark:hover:text-white;
+  dark:hover:text-white
+  transition
+  duration-500;
 }
 
 /* Stop the stretching of images but allow proper sizing of overflow lines */

@@ -5,7 +5,7 @@ import { FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa';
 import Obfuscate from 'react-obfuscate';
 import useSiteMetadata from 'hooks/useSiteMetadata';
 
-interface LayoutProps {
+export interface LayoutProps {
   children: React.ReactNode;
 }
 

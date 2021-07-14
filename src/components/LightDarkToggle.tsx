@@ -2,7 +2,11 @@ import React, { useEffect, useContext, useRef, ChangeEvent } from 'react';
 import Themes from 'constants/Themes';
 import { ThemeContext } from './ThemeContext';
 
-const ToggleMode = () => {
+export interface ToggleModeProps {
+  isPost?: boolean;
+}
+
+const ToggleMode = ({ isPost = false }: ToggleModeProps) => {
   const hasRenderedRef = useRef(false);
   const { theme, setTheme } = useContext(ThemeContext);
   const handleToggle = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +32,7 @@ const ToggleMode = () => {
   }
 
   return (
-    <div className="theme-toggler">
+    <div className={`theme-toggler ${isPost ? 'theme-toggler-post' : 'theme-toggler-index'}`}>
       <label htmlFor="toggle" className="title invisible h-0 absolute">
         Toggle dark mode
       </label>
@@ -41,6 +45,10 @@ const ToggleMode = () => {
       />
     </div>
   );
+};
+
+ToggleMode.defaultProps = {
+  isPost: false,
 };
 
 export default ToggleMode;

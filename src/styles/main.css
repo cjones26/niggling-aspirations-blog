@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.description-header {
+  @apply m-0 !important;
+}
+
 .main-content {
   @apply container
     mx-auto
@@ -23,7 +27,7 @@
     duration-500;
 }
 
-.published {
+.published-date {
   @apply mb-0 
     text-center !important;
 }
@@ -110,18 +114,28 @@
 }
 
 /* Stop the stretching of images but allow proper sizing of overflow lines */
+
 .gatsby-resp-image-wrapper {
   @apply whitespace-normal
     break-normal;
 }
 
+/*  Theme toggler */
+
 .theme-toggler {
-  @apply block 
-    mx-auto my-5
-    lg:fixed
+  @apply lg:fixed
     lg:top-8
     lg:right-8
     lg:my-0;
+}
+
+.theme-toggler-index {
+  @apply mt-1;
+}
+
+.theme-toggler-post {
+  @apply block 
+    mx-auto my-5;
 }
 
 .toggle {

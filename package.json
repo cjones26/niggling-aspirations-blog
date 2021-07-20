@@ -77,10 +77,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-hello-world"
+    "url": "https://github.com/cjones26/niggling-aspirations-blog"
   },
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/cjones26/niggling-aspirations-blog/issues"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": "eslint --cache --fix"

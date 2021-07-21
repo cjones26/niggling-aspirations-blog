@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.description-header {
-  @apply m-0 !important;
-}
-
 .main-content {
   @apply container
     mx-auto
@@ -25,15 +21,6 @@
     break-words
     transition
     duration-500;
-}
-
-.published-date {
-  @apply mb-0 
-    text-center !important;
-}
-
-.post-header-divider {
-  @apply my-3 !important;
 }
 
 .footer-content {

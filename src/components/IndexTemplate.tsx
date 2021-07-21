@@ -104,7 +104,7 @@ export default function HomePage({ data, pageContext }: HomePageProps) {
               <h1>{title}</h1>
               <LightDarkToggle />
             </div>
-            <h3 className="description-header">{description}</h3>
+            <h3 className="m-0">{description}</h3>
           </div>
         </header>
         <div role="navigation" aria-label="Posts" className="mt-8">

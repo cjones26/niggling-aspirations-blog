@@ -50,9 +50,9 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
         <article>
           <header>
             <h1 className="text-center">{frontmatter.title}</h1>
-            <p className="published-date">{frontmatter.date.toLocaleUpperCase()}</p>
+            <p className="mb-0 text-center">{frontmatter.date.toLocaleUpperCase()}</p>
           </header>
-          <hr className="post-header-divider" />
+          <hr className="my-3" />
           <MDXProvider components={components}>
             <MDXRenderer>{body}</MDXRenderer>
           </MDXProvider>

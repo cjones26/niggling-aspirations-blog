@@ -10,7 +10,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         'light-gradient':
-          'radial-gradient(circle 993px at 0.5% 50.5%, rgba(137,171,245,0.37) 0%, rgba(245,247,252,1) 100.2% )',
+          'radial-gradient(circle 993px at 0.5% 50.5%, rgba(232,238,252,0.45) 0%, rgba(255,255,255,1) 100.2% )',
         'dark-gradient': 'radial-gradient(circle 993px at 0.5% 50.5%, rgba(0,0,0,1) 0%, rgba(10,10,18,1) 100.2% )',
       },
       fontFamily: {

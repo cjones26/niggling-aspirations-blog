@@ -23,9 +23,7 @@ export default function HomePage({ post }: IndexPostTemplateProps) {
       <div className="mb-3">{post.frontmatter.date.toLocaleUpperCase()}</div>
       <div className="flex justify-between">
         <h3 className="mt-0">
-          <Link to={post.fields.slug} className="hover:text-blue-500">
-            {postTitle}
-          </Link>
+          <Link to={post.fields.slug}>{postTitle}</Link>
         </h3>
       </div>
       <p className="my-1">{post.excerpt}</p>

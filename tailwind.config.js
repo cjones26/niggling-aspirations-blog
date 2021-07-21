@@ -5,8 +5,13 @@ module.exports = {
   purge: ['./src/**/*.{js,ts,jsx,tsx,mdx}', './gatsby-ssr.js'],
   darkMode: 'class',
   important: true,
+  mode: 'jit',
   theme: {
     extend: {
+      backgroundImage: {
+        'light-gradient':
+          'radial-gradient(circle 993px at 0.5% 50.5%, rgba(137,171,245,0.37) 0%, rgba(245,247,252,1) 100.2% )',
+      },
       colors: {
         'midnight-express': {
           light: '#000033',

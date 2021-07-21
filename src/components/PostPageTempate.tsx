@@ -1,5 +1,5 @@
 import React from 'react';
-import { graphql, navigate } from 'gatsby';
+import { graphql, Link } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { MDXProvider } from '@mdx-js/react';
 import CodeBlock from './CodeBlock';
@@ -42,9 +42,9 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
     <ThemeContextProvider>
       <Layout>
         <div className="flex">
-          <button type="button" className="all-articles" onClick={() => navigate(-1)}>
+          <Link type="button" className="all-articles" to="/">
             All Articles
-          </button>
+          </Link>
           <LightDarkToggle isPost />
         </div>
         <article>

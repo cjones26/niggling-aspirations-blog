@@ -18,17 +18,19 @@ export interface IndexPostTemplateProps {
 export default function HomePage({ post }: IndexPostTemplateProps) {
   const postTitle = post.frontmatter.title || post.fields.slug;
 
-  console.log('post: ', post);
-
   return (
-    <div>
-      <div>{post.frontmatter.date.toLocaleUpperCase()}</div>
-      <Link to={post.fields.slug}>
-        <h3>{postTitle}</h3>
-      </Link>
-      <p>{post.excerpt}</p>
-      <ul className="italic">{post.frontmatter.tags.join(', ')}</ul>
-      <hr />
+    <div className="mb-5">
+      <div className="mb-3">{post.frontmatter.date.toLocaleUpperCase()}</div>
+      <div className="flex justify-between">
+        <h3 className="mt-0">
+          <Link to={post.fields.slug} className="hover:text-blue-500">
+            {postTitle}
+          </Link>
+        </h3>
+      </div>
+      <p className="my-1">{post.excerpt}</p>
+      <strong>Tags: </strong>
+      <ul className="inline-block p-0 mt-2 mb-0 italic">{post.frontmatter.tags.join(', ')}</ul>
     </div>
   );
 }

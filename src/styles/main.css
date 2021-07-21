@@ -55,7 +55,7 @@
     h-10
     text-center 
     border
-    border-gray-200
+    border-gray-500
     rounded-sm
     text-xl
     text-gray-900
@@ -64,7 +64,7 @@
     my-5
     no-underline 
     leading-10
-    hover:text-indigo-400
+    hover:text-gray-600
     lg:h-8
     lg:fixed
     lg:top-8
@@ -135,6 +135,7 @@
 
 .theme-toggler-post {
   @apply block 
+    mt-1
     mx-auto my-5;
 }
 

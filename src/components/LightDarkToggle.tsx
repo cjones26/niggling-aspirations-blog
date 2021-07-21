@@ -32,17 +32,20 @@ const ToggleMode = ({ isPost = false }: ToggleModeProps) => {
   }
 
   return (
-    <div className={`theme-toggler ${isPost ? 'theme-toggler-post' : 'theme-toggler-index'}`}>
-      <label htmlFor="toggle" className="title invisible h-0 absolute">
-        Toggle dark mode
-      </label>
-      <input
-        id="toggle"
-        className="toggle ml-5"
-        type="checkbox"
-        checked={theme !== Themes.DARK}
-        onChange={handleToggle}
-      />
+    <div className="flex">
+      <div className={`theme-toggler ${isPost ? 'theme-toggler-post' : 'theme-toggler-index'}`}>
+        <label htmlFor="toggle" className="title invisible h-0 absolute">
+          Toggle dark mode
+        </label>
+        <input
+          id="toggle"
+          className="toggle ml-5"
+          type="checkbox"
+          checked={theme !== Themes.DARK}
+          onChange={handleToggle}
+        />
+      </div>
+      <img src="/profile-image.jpg" alt="Charles Jones" className="rounded-full my-0 ml-4 self-start lg:hidden" />
     </div>
   );
 };

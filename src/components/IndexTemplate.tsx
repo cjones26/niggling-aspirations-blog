@@ -97,6 +97,9 @@ export default function HomePage({ data, pageContext }: HomePageProps) {
       <Layout>
         <header role="banner">
           <div>
+            <div className="hidden lg:block lg:fixed lg:top-1 lg:left-8 lg:my-0">
+              <img src="/profile-image.jpg" alt="Charles Jones" className="rounded-full" width="48" />
+            </div>
             <div className="flex justify-between">
               <h1>{title}</h1>
               <LightDarkToggle />
@@ -104,13 +107,21 @@ export default function HomePage({ data, pageContext }: HomePageProps) {
             <h3 className="description-header">{description}</h3>
           </div>
         </header>
-        <div role="navigation" aria-label="Posts">
-          {posts.map(({ node }) => (
-            <IndexPost key={node.fields.slug} post={node} />
-          ))}
+        <div role="navigation" aria-label="Posts" className="mt-8">
+          {posts.map(({ node }, index) => {
+            const lastPost = index === posts.length - 1;
+
+            return (
+              <div key={node.fields.slug} className={lastPost ? 'mb-10' : ''}>
+                <IndexPost post={node} />
+                {lastPost ? null : <hr className="my-8" />}
+              </div>
+            );
+          })}
           {generatePagination()}
         </div>
       </Layout>
     </ThemeContextProvider>
   );
 }
+<hr />;

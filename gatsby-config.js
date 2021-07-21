@@ -9,7 +9,7 @@ const path = require('path');
 module.exports = {
   siteMetadata: {
     title: `Niggling Aspirations`,
-    description: `The technical blog of C. L. Jones.  Hopefully a headache helper.`,
+    description: `Hopefully a headache helper.`,
     url: 'https://nigglingaspirations.com',
   },
   plugins: [
@@ -17,7 +17,6 @@ module.exports = {
     {
       resolve: 'gatsby-plugin-root-import',
       options: {
-        src: path.join(__dirname, 'src'),
         components: path.join(__dirname, 'src/components'),
         constants: path.join(__dirname, 'src/constants'),
         hooks: path.join(__dirname, 'src/hooks'),

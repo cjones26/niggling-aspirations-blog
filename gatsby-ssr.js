@@ -3,7 +3,7 @@ const React = require('react');
 
 exports.onRenderBody = ({ setHeadComponents, setBodyAttributes }) => {
   setBodyAttributes({
-    className: 'bg-white dark:bg-midnight-express',
+    className: 'bg-light-gradient dark:bg-midnight-express bg-fixed',
   });
 
   setHeadComponents([

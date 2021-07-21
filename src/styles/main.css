@@ -55,7 +55,6 @@ a {
     my-5
     no-underline 
     leading-10
-    hover:text-gray-600
     lg:h-8
     lg:fixed
     lg:top-8
@@ -65,7 +64,6 @@ a {
     lg:leading-7
     dark:border-white
     dark:text-white
-    dark:hover:text-indigo-200
     !important;
 }
 

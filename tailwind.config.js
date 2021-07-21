@@ -11,13 +11,7 @@ module.exports = {
       backgroundImage: {
         'light-gradient':
           'radial-gradient(circle 993px at 0.5% 50.5%, rgba(137,171,245,0.37) 0%, rgba(245,247,252,1) 100.2% )',
-      },
-      colors: {
-        'midnight-express': {
-          light: '#000033',
-          DEFAULT: '#000033',
-          dark: '#000033',
-        },
+        'dark-gradient': 'radial-gradient(circle 993px at 0.5% 50.5%, rgba(0,0,0,1) 0%, rgba(10,10,18,1) 100.2% )',
       },
       fontFamily: {
         sans: ['Lato', ...defaultTheme.fontFamily.sans],

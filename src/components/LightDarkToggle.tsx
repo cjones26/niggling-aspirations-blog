@@ -32,7 +32,7 @@ const ToggleMode = ({ isPost = false }: ToggleModeProps) => {
   }
 
   return (
-    <div className={`items-end theme-toggler ${isPost ? '' : 'pr-5'}`}>
+    <div className={`items-end theme-toggler ${isPost ? '' : 'pr-5 lg:pr-0'}`}>
       <label htmlFor="toggle" className="title invisible h-0 absolute">
         Toggle dark mode
       </label>

@@ -1,19 +1,78 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import Helmet from 'react-helmet';
-import { FaEnvelope, FaGithub, FaLinkedin } from 'react-icons/fa';
+import { Link } from 'gatsby';
+import { FaEnvelope, FaGithub, FaLinkedin, FaRegArrowAltCircleLeft } from 'react-icons/fa';
 import Obfuscate from 'react-obfuscate';
 import useSiteMetadata from 'hooks/useSiteMetadata';
+import LayoutSources from 'constants/LayoutSources';
+import LightDarkToggle from './LightDarkToggle';
 
 export interface LayoutProps {
   children: React.ReactNode;
+  layoutSource: LayoutSources;
+  postTitle?: string;
+  postDate?: string;
 }
 
-export default function Layout({ children }: LayoutProps): JSX.Element {
+export default function Layout({ children, layoutSource, postTitle, postDate }: LayoutProps): JSX.Element {
   const { title, description } = useSiteMetadata();
+  const generateAbout = (className?: string): JSX.Element => (
+    <Link to="/about">
+      <img src="/profile-image.jpg" alt="Charles Jones" className={className} width="48" />
+    </Link>
+  );
+  const generateHeader = (): JSX.Element => {
+    const defaultLayout = (
+      <div>
+        <div className="hidden lg:flex lg:fixed lg:top-1 lg:left-8 lg:my-0">{generateAbout('rounded-full')}</div>
+        <div className="flex justify-between">
+          <h1>{title}</h1>
+          <div className="flex flex-shrink-0">
+            <LightDarkToggle />
+            {generateAbout('rounded-full my-0 self-start lg:hidden')}
+          </div>
+        </div>
+        <h3 className="m-0">{description}</h3>
+      </div>
+    );
+
+    switch (layoutSource) {
+      case LayoutSources.INDEX:
+        return defaultLayout;
+      case LayoutSources.POST:
+        return (
+          <>
+            <div className="flex justify-between mb-3">
+              <Link className="all-articles" type="button" to="/">
+                All Articles
+              </Link>
+              <Link className="text-4xl lg:hidden flex" type="button" to="/">
+                <FaRegArrowAltCircleLeft />
+              </Link>
+              <div className="flex flex-shrink-0 lg:pr-0 lg:fixed lg:top-8 lg:right-8 lg:my-0;">
+                <LightDarkToggle isPost />
+              </div>
+            </div>
+            <h1 className="text-center">{postTitle}</h1>
+            <div className="flex justify-center">{generateAbout('rounded-full my-0')}</div>
+            <p className="mb-0 text-center">{postDate}</p>
+          </>
+        );
+      case LayoutSources.ABOUT:
+        return (
+          <div className="text-center">
+            <h1>{title}</h1>
+            <LightDarkToggle />
+          </div>
+        );
+      default:
+        return defaultLayout;
+    }
+  };
 
   return (
-    <div>
+    <div className="layout">
       <Helmet>
         <html lang="en" />
         <title>{title}</title>
@@ -24,9 +83,10 @@ export default function Layout({ children }: LayoutProps): JSX.Element {
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
       </Helmet>
+      <header role="banner">{generateHeader()}</header>
       <main className="main-content">{children}</main>
       <footer className="footer-content">
-        <ul className="flex items-center">
+        <ul className="flex items-center my-0">
           <li className="p-4">
             <Obfuscate className="sm-email" email="charlie.l.jones@gmail.com" aria-label="Email Me">
               <FaEnvelope />

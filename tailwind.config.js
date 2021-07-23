@@ -10,8 +10,8 @@ module.exports = {
     extend: {
       backgroundImage: {
         'light-gradient':
-          'radial-gradient(circle 993px at 0.5% 50.5%, rgba(232,238,252,0.45) 0%, rgba(255,255,255,1) 100.2% )',
-        'dark-gradient': 'radial-gradient(circle 993px at 0.5% 50.5%, rgba(0,0,0,1) 0%, rgba(10,10,18,1) 100.2% )',
+          'radial-gradient(circle at 0.5% 50.5%, rgba(219,229,255,0.45) 0%, rgba(255,255,255,1) 100.2% )',
+        'dark-gradient': 'radial-gradient(circle at 0.5% 50.5%, rgba(0,0,0,1) 0%, rgba(10,10,18,1) 100.2% )',
       },
       fontFamily: {
         sans: ['Lato', ...defaultTheme.fontFamily.sans],
@@ -25,6 +25,9 @@ module.exports = {
               },
               'code::after': {
                 content: '""',
+              },
+              'ul > li::before': {
+                content: 'none',
               },
             },
           ],

@@ -6,7 +6,7 @@ a {
   @apply hover:text-blue-600 dark:hover:text-blue-300 !important;
 }
 
-.main-content {
+.layout {
   @apply container
     mx-auto
     p-3
@@ -42,8 +42,7 @@ a {
 }
 
 .all-articles {
-  @apply block
-    h-10
+  @apply hidden
     text-center 
     border
     border-gray-500
@@ -64,6 +63,7 @@ a {
     lg:leading-7
     dark:border-white
     dark:text-white
+    lg:block
     !important;
 }
 
@@ -115,20 +115,12 @@ a {
 /*  Theme toggler */
 
 .theme-toggler {
-  @apply lg:fixed
+  @apply mt-1
+    lg:pr-0
+    lg:fixed
     lg:top-8
     lg:right-8
     lg:my-0;
-}
-
-.theme-toggler-index {
-  @apply mt-1;
-}
-
-.theme-toggler-post {
-  @apply block 
-    mt-1
-    mx-auto my-5;
 }
 
 .toggle {

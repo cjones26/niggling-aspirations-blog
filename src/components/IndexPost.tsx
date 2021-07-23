@@ -28,7 +28,7 @@ export default function HomePage({ post }: IndexPostTemplateProps) {
       </div>
       <p className="my-1">{post.excerpt}</p>
       <strong>Tags: </strong>
-      <ul className="inline-block p-0 mt-2 mb-0 italic">{post.frontmatter.tags.join(', ')}</ul>
+      <ul className="inline-block p-0 mt-2 mb-0 italic list-none">{post.frontmatter.tags.join(', ')}</ul>
     </div>
   );
 }

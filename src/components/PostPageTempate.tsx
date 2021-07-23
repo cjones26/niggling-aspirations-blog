@@ -1,10 +1,10 @@
 import React from 'react';
-import { graphql, Link } from 'gatsby';
+import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { MDXProvider } from '@mdx-js/react';
+import LayoutSources from 'constants/LayoutSources';
 import CodeBlock from './CodeBlock';
 import Layout from './Layout';
-import LightDarkToggle from './LightDarkToggle';
 import ThemeContextProvider from './ThemeContext';
 
 export interface PostPageTemplateWithData {
@@ -40,18 +40,12 @@ export default function PostPageTemplate({ data }: PostPageTemplateWithData) {
 
   return (
     <ThemeContextProvider>
-      <Layout>
-        <div className="flex">
-          <Link type="button" className="all-articles" to="/">
-            All Articles
-          </Link>
-          <LightDarkToggle isPost />
-        </div>
+      <Layout
+        layoutSource={LayoutSources.POST}
+        postTitle={frontmatter.title}
+        postDate={frontmatter.date.toLocaleUpperCase()}
+      >
         <article>
-          <header>
-            <h1 className="text-center">{frontmatter.title}</h1>
-            <p className="mb-0 text-center">{frontmatter.date.toLocaleUpperCase()}</p>
-          </header>
           <hr className="my-3" />
           <MDXProvider components={components}>
             <MDXRenderer>{body}</MDXRenderer>

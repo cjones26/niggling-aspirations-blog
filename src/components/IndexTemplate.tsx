@@ -1,10 +1,9 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import Layout from 'components/Layout';
-import useSiteMetadata from 'hooks/useSiteMetadata';
 import IndexPost from 'components/IndexPost';
-import LightDarkToggle from 'components/LightDarkToggle';
 import ThemeContextProvider from 'components/ThemeContext';
+import LayoutSources from 'constants/LayoutSources';
 
 export interface Edge {
   node: {
@@ -61,7 +60,6 @@ export const blogListQuery = graphql`
 `;
 
 export default function HomePage({ data, pageContext }: HomePageProps) {
-  const { title, description } = useSiteMetadata();
   const posts = data.allMdx.edges;
   const generatePagination = () => {
     if (pageContext.currentPage === 1) {
@@ -94,19 +92,7 @@ export default function HomePage({ data, pageContext }: HomePageProps) {
 
   return (
     <ThemeContextProvider>
-      <Layout>
-        <header role="banner">
-          <div>
-            <div className="hidden lg:block lg:fixed lg:top-1 lg:left-8 lg:my-0">
-              <img src="/profile-image.jpg" alt="Charles Jones" className="rounded-full" width="48" />
-            </div>
-            <div className="flex justify-between">
-              <h1>{title}</h1>
-              <LightDarkToggle />
-            </div>
-            <h3 className="m-0">{description}</h3>
-          </div>
-        </header>
+      <Layout layoutSource={LayoutSources.INDEX}>
         <div role="navigation" aria-label="Posts" className="mt-8">
           {posts.map(({ node }, index) => {
             const lastPost = index === posts.length - 1;
@@ -124,4 +110,3 @@ export default function HomePage({ data, pageContext }: HomePageProps) {
     </ThemeContextProvider>
   );
 }
-<hr />;

@@ -3,10 +3,10 @@ import Themes from 'constants/Themes';
 import { ThemeContext } from './ThemeContext';
 
 export interface ToggleModeProps {
-  isPost?: boolean;
+  isPostOrAbout?: boolean;
 }
 
-const ToggleMode = ({ isPost = false }: ToggleModeProps) => {
+const ToggleMode = ({ isPostOrAbout = false }: ToggleModeProps) => {
   const hasRenderedRef = useRef(false);
   const { theme, setTheme } = useContext(ThemeContext);
   const handleToggle = (event: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +32,7 @@ const ToggleMode = ({ isPost = false }: ToggleModeProps) => {
   }
 
   return (
-    <div className={`items-end theme-toggler ${isPost ? '' : 'pr-5 lg:pr-0'}`}>
+    <div className={`items-end theme-toggler ${isPostOrAbout ? '' : 'pr-5 lg:pr-0'}`}>
       <label htmlFor="toggle" className="title invisible h-0 absolute">
         Toggle dark mode
       </label>
@@ -48,7 +48,7 @@ const ToggleMode = ({ isPost = false }: ToggleModeProps) => {
 };
 
 ToggleMode.defaultProps = {
-  isPost: false,
+  isPostOrAbout: false,
 };
 
 export default ToggleMode;

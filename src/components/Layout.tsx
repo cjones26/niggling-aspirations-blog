@@ -51,7 +51,7 @@ export default function Layout({ children, layoutSource, postTitle, postDate }: 
                 <FaRegArrowAltCircleLeft />
               </Link>
               <div className="flex flex-shrink-0 lg:pr-0 lg:fixed lg:top-8 lg:right-8 lg:my-0;">
-                <LightDarkToggle isPost />
+                <LightDarkToggle isPostOrAbout />
               </div>
             </div>
             <h1 className="text-center">{postTitle}</h1>
@@ -61,9 +61,19 @@ export default function Layout({ children, layoutSource, postTitle, postDate }: 
         );
       case LayoutSources.ABOUT:
         return (
-          <div className="text-center">
-            <h1>{title}</h1>
-            <LightDarkToggle />
+          <div>
+            <div className="flex justify-between mb-3">
+              <Link className="all-articles" type="button" to="/">
+                All Articles
+              </Link>
+              <Link className="text-4xl lg:hidden flex" type="button" to="/">
+                <FaRegArrowAltCircleLeft />
+              </Link>
+              <div className="flex flex-shrink-0">
+                <LightDarkToggle isPostOrAbout />
+              </div>
+            </div>
+            <h1 className="text-center">{title}</h1>
           </div>
         );
       default:

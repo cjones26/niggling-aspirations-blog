@@ -25,6 +25,7 @@ module.exports = {
       },
     },
     'gatsby-plugin-sharp',
+    'gatsby-plugin-image',
     'gatsby-remark-images',
     {
       resolve: `gatsby-plugin-mdx`,

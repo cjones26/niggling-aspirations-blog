@@ -67,6 +67,11 @@ a {
     !important;
 }
 
+.about-image img {
+  @apply my-0
+    !important;
+}
+
 /* Social media icons */
 
 .sm-email {

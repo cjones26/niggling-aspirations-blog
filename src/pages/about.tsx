@@ -12,7 +12,7 @@ export default function About() {
           <StaticImage
             className="about-image rounded-3xl"
             src="../../static/profile-image-large.jpg"
-            alt="Charles Jones"
+            alt="About Charles Jones"
           />
           <p>
             Hello, my name is Charles Jones and I am a software engineer who currently resides in Charlotte, North

@@ -7,7 +7,7 @@ tags:
   - 'npm'
 ---
 
-We have several front-end modules, all of which utilize a shared enterprise UI/UX library. We needed a way to keep this shared library's dependency version in sync, therefore, we needed a way to programmatically pull the latest library package version from our local registry.
+We have several front-end modules, all of which utilize a shared enterprise UI library. We needed a way to keep this shared library's dependency version in sync, therefore, we needed a way to programmatically pull the latest library package version from our local registry.
 
 I am not a big fan of utilizing dependencies to do something which we can do ourselves with minimal effort. Therefore, I put together a quick function (with some help from the npmview project) which allows us to pull the latest package version using the undocumented npm API. Note that, because it's using the undocumented API that it could break at any time. I've tested the function with npm version 6.14.10 & 6.14.11 and it seems to work fine.
 

@@ -19,7 +19,7 @@ export default function Layout({ children, layoutSource, postTitle, postDate }: 
   const { title, description } = useSiteMetadata();
   const generateAbout = (className?: string): JSX.Element => (
     <Link to="/about">
-      <img src="/profile-image-small.jpg" alt="Charles Jones" className={className} width="48" />
+      <img src="/profile-image-small.jpg" alt="About Charles Jones" className={className} width="48" />
     </Link>
   );
   const generateHeader = (): JSX.Element => {

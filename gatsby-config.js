@@ -47,6 +47,12 @@ module.exports = {
     },
     'gatsby-plugin-postcss',
     'gatsby-plugin-react-helmet',
+    {
+      resolve: `gatsby-plugin-disqus`,
+      options: {
+        shortname: `nigglingaspirations`,
+      },
+    },
     'gatsby-plugin-webpack-bundle-analyser-v2',
   ],
 };

@@ -4,6 +4,8 @@ import Layout from 'components/Layout';
 import IndexPost from 'components/IndexPost';
 import ThemeContextProvider from 'components/ThemeContext';
 import LayoutSources from 'constants/LayoutSources';
+import { Helmet } from 'react-helmet';
+import useSiteMetadata from 'hooks/useSiteMetadata';
 
 export interface Edge {
   node: {
@@ -60,6 +62,7 @@ export const blogListQuery = graphql`
 `;
 
 export default function HomePage({ data, pageContext }: HomePageProps) {
+  const { title } = useSiteMetadata();
   const posts = data.allMdx.edges;
   const generatePagination = () => {
     if (pageContext.currentPage === 1) {
@@ -92,6 +95,9 @@ export default function HomePage({ data, pageContext }: HomePageProps) {
 
   return (
     <ThemeContextProvider>
+      <Helmet>
+        <title>{title}</title>
+      </Helmet>
       <Layout layoutSource={LayoutSources.INDEX}>
         <div role="navigation" aria-label="Posts" className="mt-8">
           {posts.map(({ node }, index) => {

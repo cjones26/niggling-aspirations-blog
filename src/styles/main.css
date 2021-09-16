@@ -6,6 +6,10 @@ a {
   @apply hover:text-blue-600 dark:hover:text-blue-300 !important;
 }
 
+.dark .layout {
+  color: #fff !important;
+}
+
 .layout {
   @apply container
     mx-auto
@@ -70,6 +74,10 @@ a {
 .about-image img {
   @apply my-0
     !important;
+}
+
+.utterances-comment-box {
+  @apply whitespace-normal !important;
 }
 
 /* Social media icons */

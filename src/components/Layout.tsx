@@ -85,7 +85,6 @@ export default function Layout({ children, layoutSource, postTitle, postDate }: 
     <div className="layout">
       <Helmet>
         <html lang="en" />
-        <title>{title}</title>
         <meta name="description" content={description} />
         <meta property="og:site_name" content={title} />
         {/* <meta property="og:image" content={metaImageUrl} /> */}
